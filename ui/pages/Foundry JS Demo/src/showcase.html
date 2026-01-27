@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Showcase - Dev</title>
+  <style>
+    /* Custom hover effects not available in toucan */
+    .card-hover:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .button-primary:hover {
+      opacity: 0.9;
+    }
+    .button-normal:hover {
+      opacity: 0.9;
+    }
+    .event-item:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+  </style>
+</head>
+<body class="theme-light bg-basement">
+  <div id="root"></div>
+
+  <script type="module">
+    import '../node_modules/@crowdstrike/tailwind-toucan-base/toucan.css';
+    import './styles.css';
+
+    import React, { useState } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    // Import all presentational components
+    import { NavigationUI } from './components/navigation-presentational.tsx';
+    import { NavigationDemoUI } from './components/navigation-demo-presentational.tsx';
+    import { EventsDemoUI } from './components/events-demo-presentational.tsx';
+    import { ModalsDemoUI } from './components/modals-demo-presentational.tsx';
+    import { CollectionsDemoUI } from './components/collections-demo-presentational.tsx';
+    import { ApiIntegrationsDemoUI } from './components/api-integrations-demo-presentational.tsx';
+    import { LogScaleDemoUI } from './components/logscale-demo-presentational.tsx';
+    import { CloudFunctionsDemoUI } from './components/cloud-functions-demo-presentational.tsx';
+    import { WorkflowsDemoUI } from './components/workflows-demo-presentational.tsx';
+
+    // Navigation links data
+    const navigationLinks = [
+      {
+        path: "/events",
+        label: "Events",
+        category: "Core",
+        description: "Event handling and context data",
+      },
+      {
+        path: "/navigation",
+        label: "Navigation",
+        category: "Core",
+        description: "Navigation utilities and hash handling",
+      },
+      {
+        path: "/modals",
+        label: "Modals",
+        category: "Core",
+        description: "Modal management within Falcon Console",
+      },
+      {
+        path: "/collections",
+        label: "Collections",
+        category: "Data",
+        description: "CRUD operations on Collections",
+      },
+      {
+        path: "/api-integrations",
+        label: "API Integrations",
+        category: "Data",
+        description: "External API integration calls",
+      },
+      {
+        path: "/logscale",
+        label: "LogScale",
+        category: "Data",
+        description: "LogScale integration and queries",
+      },
+      {
+        path: "/cloud-functions",
+        label: "Cloud Functions",
+        category: "Logic",
+        description: "Cloud Functions with HTTP methods",
+      },
+      {
+        path: "/workflows",
+        label: "Workflows",
+        category: "Logic",
+        description: "Workflow execution and management",
+      },
+    ];
+
+    // Mock data
+    const mockEvents = [
+      {
+        id: 1,
+        type: 'data',
+        timestamp: new Date().toISOString(),
+        data: JSON.stringify({
+          app: {
+            id: "c06ca03c073354d29a0f66deb71ebc7b6"
+          },
+          theme: "theme-light",
+          user: {
+            uuid: "8be9937b-3042-4ad0-ba3e-0dcf663d0dae",
+            username: "javier.carrasco@crowdstrike.com"
+          },
+          cid: "5ddb0407bef249c19c7a975f17979a1f",
+          locale: "en-us"
+        }, null, 2)
+      }
+    ];
+
+    function App() {
+      const [events, setEvents] = useState(mockEvents);
+      // Get initial path from hash or default to /events
+      const getPathFromHash = () => {
+        const hash = window.location.hash.slice(1); // Remove the #
+        return hash || "/events";
+      };
+      const [currentPath, setCurrentPath] = useState(getPathFromHash());
+
+      // Listen for hash changes (back/forward browser navigation)
+      React.useEffect(() => {
+        const handleHashChange = () => {
+          const newPath = getPathFromHash();
+          setCurrentPath(newPath);
+          setNavigationData(prev => ({
+            ...prev,
+            currentPath: newPath
+          }));
+        };
+
+        window.addEventListener('hashchange', handleHashChange);
+        return () => window.removeEventListener('hashchange', handleHashChange);
+      }, []);
+
+      // Mock data state for all components
+      const [navigationData, setNavigationData] = useState({
+        currentPath: "/events",
+        currentHash: "",
+        isConnected: true,
+        navigationAvailable: true,
+        navigationEvents: [
+          {
+            id: 1,
+            type: 'initial-load',
+            timestamp: new Date().toISOString(),
+            path: '/events',
+            source: 'app-initialization'
+          },
+          {
+            id: 2,
+            type: 'react-router-navigation',
+            timestamp: new Date(Date.now() - 60000).toISOString(),
+            path: '/navigation',
+            source: 'navigation-demo'
+          }
+        ],
+        testUrl: "https://falcon.crowdstrike.com"
+      });
+
+      const [modalData, setModalData] = useState({
+        modalConfig: {
+          id: '94df01313a8a4aaaa5e6c64eb737f01f',
+          type: 'page',
+          title: 'Demo Modal Content',
+          path: '/modal-demo',
+          data: JSON.stringify({
+            userId: 'demo-user-123',
+            mode: 'interactive',
+            theme: 'gradient',
+            features: ['data-display', 'close-actions', 'parent-communication']
+          }, null, 2),
+          size: 'lg',
+          align: 'top'
+        },
+        loading: false,
+        results: {
+          message: 'Modal opened successfully',
+          returnData: {
+            action: 'confirmed',
+            formData: { name: 'Demo User', email: 'demo@crowdstrike.com' }
+          }
+        },
+        error: null,
+        connectionStatus: { connected: true }
+      });
+
+      const [collectionsData, setCollectionsData] = useState({
+        collectionName: 'demo-collection',
+        recordKey: 'user-123',
+        recordData: `{
+  "name": "John Doe",
+  "age": 42,
+  "department": "Security",
+  "aliases": ["jdoe", "john.doe"],
+  "active": true
+}`,
+        searchFilter: 'department:"Security"',
+        loading: false,
+        results: {
+          operation: 'read',
+          message: 'Record retrieved successfully',
+          data: {
+            key: 'user-123',
+            record: {
+              name: 'John Doe',
+              age: 42,
+              department: 'Security',
+              aliases: ['jdoe', 'john.doe'],
+              active: true,
+              created_at: '2024-01-15T10:30:00Z',
+              updated_at: '2024-01-20T14:22:00Z'
+            }
+          }
+        },
+        error: null,
+        isConnected: true
+      });
+
+      const [apiIntegrationsData, setApiIntegrationsData] = useState({
+        definitionId: 'weather-service-integration',
+        operationId: 'GetWeatherByCity',
+        pathParams: '{\n  "city": "Austin",\n  "country": "US"\n}',
+        queryParams: '{\n  "units": "metric",\n  "lang": "en"\n}',
+        requestBody: '{}',
+        headers: '{\n  "Accept": "application/json",\n  "Content-Type": "application/json"\n}',
+        loading: false,
+        results: {
+          statusCode: 200,
+          message: 'API call successful',
+          data: {
+            weather: {
+              temperature: 22,
+              humidity: 65,
+              conditions: 'partly cloudy',
+              wind_speed: 12
+            },
+            location: {
+              city: 'Austin',
+              country: 'US',
+              coordinates: { lat: 30.2672, lon: -97.7431 }
+            }
+          }
+        },
+        error: null,
+        isConnected: true
+      });
+
+      const [logScaleData, setLogScaleData] = useState({
+        eventData: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          event_type: 'user_login',
+          username: 'john.doe',
+          ip_address: '192.168.1.100',
+          user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          success: true,
+          session_id: 'sess_abc123',
+          location: {
+            country: 'US',
+            city: 'Austin'
+          }
+        }, null, 2),
+        searchQuery: 'event_type=user_login | stats count() by username',
+        timeStart: '24h',
+        timeEnd: 'now',
+        savedQueryId: 'query_security_events_001',
+        queryParameters: '{\n  "min_severity": "high",\n  "time_range": "24h"\n}',
+        loading: false,
+        results: {
+          operation: 'query',
+          message: 'Query executed successfully',
+          data: {
+            total_events: 1247,
+            time_range: '24h',
+            results: [
+              { username: 'john.doe', count: 15 },
+              { username: 'jane.smith', count: 12 },
+              { username: 'admin', count: 8 }
+            ]
+          }
+        },
+        error: null,
+        isConnected: true
+      });
+
+      const [cloudFunctionsData, setCloudFunctionsData] = useState({
+        functionName: 'DataProcessorFunction',
+        functionVersion: '1',
+        httpMethod: 'POST',
+        functionPath: '/process',
+        requestData: `{
+  "data": [1, 2, 3, 4, 5],
+  "operation": "sum",
+  "options": {
+    "format": "json",
+    "includeMetadata": true
+  }
+}`,
+        queryParams: '',
+        loading: false,
+        results: {
+          message: 'Function executed successfully',
+          method: 'POST',
+          path: '/process',
+          data: {
+            result: 15,
+            operation: 'sum',
+            input_count: 5,
+            execution_time_ms: 12,
+            metadata: {
+              function_version: '1',
+              timestamp: new Date().toISOString(),
+              request_id: 'req_xyz789'
+            }
+          }
+        },
+        error: null,
+        isConnected: true
+      });
+
+      const [workflowsData, setWorkflowsData] = useState({
+        workflowName: "IncidentResponseWorkflow",
+        parameters: JSON.stringify({
+          targetHost: "server-01",
+          action: "investigate",
+          severity: "high",
+          analyst: "john.doe"
+        }, null, 2),
+        executionId: "exec_abc123def456",
+        loading: false,
+        error: null,
+        results: {
+          type: 'trigger',
+          data: {
+            execution_id: 'exec_abc123def456',
+            workflow_name: 'IncidentResponseWorkflow',
+            status: 'running',
+            started_at: new Date().toISOString(),
+            parameters: {
+              targetHost: 'server-01',
+              action: 'investigate',
+              severity: 'high',
+              analyst: 'john.doe'
+            },
+            steps_completed: 2,
+            total_steps: 5
+          }
+        },
+        isConnected: true
+      });
+
+      const handleTriggerTest = () => {
+        const newEvent = {
+          id: Date.now(),
+          type: 'test-event',
+          timestamp: new Date().toISOString(),
+          data: JSON.stringify({ message: 'Test event triggered!', source: 'manual' }, null, 2)
+        };
+        setEvents([newEvent, ...events].slice(0, 50));
+      };
+
+      const handleClearEvents = () => {
+        setEvents([]);
+      };
+
+      const handleNavigate = (path) => {
+        // Update the URL hash
+        window.location.hash = path;
+        setCurrentPath(path);
+        setNavigationData(prev => ({
+          ...prev,
+          currentPath: path,
+          navigationEvents: [
+            {
+              id: Date.now(),
+              type: 'react-router-navigation',
+              timestamp: new Date().toISOString(),
+              path: path,
+              source: 'navigation-click'
+            },
+            ...prev.navigationEvents
+          ].slice(0, 20)
+        }));
+      };
+
+      // Dummy handlers - these would normally interact with real APIs
+      const dummyHandlers = {
+        navigation: {
+          onTestUrlChange: (url) => setNavigationData(prev => ({ ...prev, testUrl: url })),
+          onNavigateToPath: handleNavigate,
+          onExternalNavigation: (url) => console.log('External navigation to:', url),
+          onClearNavigationEvents: () => setNavigationData(prev => ({ ...prev, navigationEvents: [] }))
+        },
+        modals: {
+          onConfigChange: (config) => setModalData(prev => ({ ...prev, modalConfig: config })),
+          onOpenModal: () => console.log('Opening modal...'),
+          onCloseModal: () => console.log('Closing modal...'),
+          onLoadUserModal: () => console.log('Loading user modal preset...'),
+          onLoadReportModal: () => console.log('Loading report modal preset...'),
+          onLoadSettingsModal: () => console.log('Loading settings modal preset...')
+        },
+        collections: {
+          onCollectionNameChange: (name) => setCollectionsData(prev => ({ ...prev, collectionName: name })),
+          onRecordKeyChange: (key) => setCollectionsData(prev => ({ ...prev, recordKey: key })),
+          onRecordDataChange: (data) => setCollectionsData(prev => ({ ...prev, recordData: data })),
+          onSearchFilterChange: (filter) => setCollectionsData(prev => ({ ...prev, searchFilter: filter })),
+          onExecuteOperation: (op) => console.log('Executing collection operation:', op),
+          onClearResults: () => setCollectionsData(prev => ({ ...prev, results: null }))
+        },
+        apiIntegrations: {
+          onDefinitionIdChange: (id) => setApiIntegrationsData(prev => ({ ...prev, definitionId: id })),
+          onOperationIdChange: (id) => setApiIntegrationsData(prev => ({ ...prev, operationId: id })),
+          onPathParamsChange: (params) => setApiIntegrationsData(prev => ({ ...prev, pathParams: params })),
+          onQueryParamsChange: (params) => setApiIntegrationsData(prev => ({ ...prev, queryParams: params })),
+          onRequestBodyChange: (body) => setApiIntegrationsData(prev => ({ ...prev, requestBody: body })),
+          onHeadersChange: (headers) => setApiIntegrationsData(prev => ({ ...prev, headers: headers })),
+          onExecuteIntegration: () => console.log('Executing API integration...'),
+          onClearResults: () => setApiIntegrationsData(prev => ({ ...prev, results: null })),
+          onLoadExampleWeatherApi: () => console.log('Loading weather API example...'),
+          onLoadExampleRestApi: () => console.log('Loading REST API example...')
+        },
+        logScale: {
+          onEventDataChange: (data) => setLogScaleData(prev => ({ ...prev, eventData: data })),
+          onSearchQueryChange: (query) => setLogScaleData(prev => ({ ...prev, searchQuery: query })),
+          onTimeStartChange: (start) => setLogScaleData(prev => ({ ...prev, timeStart: start })),
+          onTimeEndChange: (end) => setLogScaleData(prev => ({ ...prev, timeEnd: end })),
+          onSavedQueryIdChange: (id) => setLogScaleData(prev => ({ ...prev, savedQueryId: id })),
+          onQueryParametersChange: (params) => setLogScaleData(prev => ({ ...prev, queryParameters: params })),
+          onExecuteOperation: (op) => console.log('Executing LogScale operation:', op),
+          onClearResults: () => setLogScaleData(prev => ({ ...prev, results: null })),
+          onUpdateEventTimestamp: () => {
+            const updatedData = JSON.parse(logScaleData.eventData);
+            updatedData.timestamp = new Date().toISOString();
+            setLogScaleData(prev => ({ ...prev, eventData: JSON.stringify(updatedData, null, 2) }));
+          }
+        },
+        cloudFunctions: {
+          onFunctionNameChange: (name) => setCloudFunctionsData(prev => ({ ...prev, functionName: name })),
+          onFunctionVersionChange: (version) => setCloudFunctionsData(prev => ({ ...prev, functionVersion: version })),
+          onHttpMethodChange: (method) => setCloudFunctionsData(prev => ({ ...prev, httpMethod: method })),
+          onFunctionPathChange: (path) => setCloudFunctionsData(prev => ({ ...prev, functionPath: path })),
+          onRequestDataChange: (data) => setCloudFunctionsData(prev => ({ ...prev, requestData: data })),
+          onQueryParamsChange: (params) => setCloudFunctionsData(prev => ({ ...prev, queryParams: params })),
+          onExecuteFunction: () => console.log('Executing cloud function...'),
+          onClearResults: () => setCloudFunctionsData(prev => ({ ...prev, results: null })),
+          onLoadExampleDataProcessor: () => console.log('Loading data processor example...'),
+          onLoadExampleGetRequest: () => console.log('Loading GET request example...'),
+          onLoadExampleFileProcessor: () => console.log('Loading file processor example...')
+        },
+        workflows: {
+          onWorkflowNameChange: (name) => setWorkflowsData(prev => ({ ...prev, workflowName: name })),
+          onParametersChange: (params) => setWorkflowsData(prev => ({ ...prev, parameters: params })),
+          onExecutionIdChange: (id) => setWorkflowsData(prev => ({ ...prev, executionId: id })),
+          onExecuteWorkflow: () => console.log('Executing workflow...'),
+          onGetExecutionResults: () => console.log('Getting execution results...'),
+          onClearResults: () => setWorkflowsData(prev => ({ ...prev, results: null }))
+        }
+      };
+
+      // Render content based on current path
+      const renderContent = () => {
+        switch(currentPath) {
+          case "/events":
+            return React.createElement(EventsDemoUI, {
+              events: events,
+              eventCount: events.length,
+              recentEventsCount: events.length,
+              testEventsCount: events.filter(e => e.type === 'test-event').length,
+              connectionStatus: { status: "Connected & Listening", color: "green", icon: "🟢" },
+              onTriggerTestEvent: handleTriggerTest,
+              onClearEvents: handleClearEvents
+            });
+          case "/navigation":
+            return React.createElement(NavigationDemoUI, {
+              ...navigationData,
+              ...dummyHandlers.navigation
+            });
+          case "/modals":
+            return React.createElement(ModalsDemoUI, {
+              ...modalData,
+              ...dummyHandlers.modals
+            });
+          case "/collections":
+            return React.createElement(CollectionsDemoUI, {
+              ...collectionsData,
+              ...dummyHandlers.collections
+            });
+          case "/api-integrations":
+            return React.createElement(ApiIntegrationsDemoUI, {
+              ...apiIntegrationsData,
+              ...dummyHandlers.apiIntegrations
+            });
+          case "/logscale":
+            return React.createElement(LogScaleDemoUI, {
+              ...logScaleData,
+              ...dummyHandlers.logScale
+            });
+          case "/cloud-functions":
+            return React.createElement(CloudFunctionsDemoUI, {
+              ...cloudFunctionsData,
+              ...dummyHandlers.cloudFunctions
+            });
+          case "/workflows":
+            return React.createElement(WorkflowsDemoUI, {
+              ...workflowsData,
+              ...dummyHandlers.workflows
+            });
+          default:
+            return React.createElement('div', { className: "p-8" },
+              React.createElement('div', { className: "bg-surface-base border border-border-reg rounded-xl p-8 shadow-base text-center" },
+                React.createElement('h2', { className: "text-2xl font-bold text-titles-and-attributes mb-4" },
+                  currentPath.replace('/', '').replace(/^./, str => str.toUpperCase()).replace(/-/g, ' ')
+                ),
+                React.createElement('p', { className: "text-body-and-labels" },
+                  "Page not found. Please use the navigation menu to select a valid demo page."
+                )
+              )
+            );
+        }
+      };
+
+      return React.createElement(NavigationUI, {
+        navigationLinks: navigationLinks,
+        currentPath: currentPath,
+        eventCount: events.length,
+        onNavigate: handleNavigate
+      }, renderContent());
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

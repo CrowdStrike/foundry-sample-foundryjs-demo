@@ -1,25 +1,23 @@
 ![CrowdStrike Falcon](/images/cs-logo.png?raw=true)
 
-# $SAMPLE_NAME sample Foundry app
+# Foundryjs Demo sample Foundry app
 
-The $SAMPLE_NAME sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem. `$REPOSITORY_NAME` is an open source project, not a CrowdStrike product. As such, it carries no formal support, expressed or implied.
+The Foundryjs Demo sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem. `foundry-sample-foundryjs-demo` is an open source project, not a CrowdStrike product. As such, it carries no formal support, expressed or implied.
 
 This app is one of several App Templates included in Foundry that you can use to jumpstart your development. It comes complete with a set of preconfigured capabilities aligned to its business purpose. Deploy this app from the Templates page with a single click in the Foundry UI, or create an app from this template using the CLI.
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > To view documentation and deploy this sample app, you need access to the Falcon console.
 
 ## Description
 
-_A description of this app's use case and what it does._
+A comprehensive demonstration of the CrowdStrike Foundry JavaScript SDK (`@crowdstrike/foundry-js`) showcasing all major features and capabilities through an interactive web application. This demo provides working examples of core API features including FalconApi connection, event handling, workflow execution, collections CRUD operations, LogScale integration, API integrations, cloud functions, navigation utilities, modal management, and comprehensive error handling patterns.
 
 ## Prerequisites
 
 * The Foundry CLI (instructions below).
-* _Delete or add tools below as required. These are from other samples._
-* Python 3.13+ (needed if modifying the app's functions). See [Python For Beginners](https://www.python.org/about/gettingstarted/) for installation instructions.
-* Go v1.23+ (needed if modifying the app's functions). See https://go.dev/learn for installation instructions.
-* Yarn (needed if modifying the app's UI). See https://yarnpkg.com/getting-started for installation instructions.
+* Node.js 18+ (needed if modifying the app's UI). See [Node.js](https://nodejs.org/) for installation instructions.
+* Python 3.11+ (needed if modifying the app's functions). See [Python For Beginners](https://www.python.org/about/gettingstarted/) for installation instructions.
 
 ### Install the Foundry CLI
 
@@ -49,11 +47,11 @@ Run `foundry version` to verify it's installed correctly.
 
 ## Getting Started
 
-Clone this sample to your local system, or [download as a zip file](https://github.com/CrowdStrike/$REPOSITORY_NAME/archive/refs/heads/main.zip) and import it into Foundry.
+Clone this sample to your local system, or [download as a zip file](https://github.com/CrowdStrike/foundry-sample-foundryjs-demo/archive/refs/heads/main.zip) and import it into Foundry.
 
 ```shell
-git clone https://github.com/CrowdStrike/$REPOSITORY_NAME
-cd $REPOSITORY_NAME
+git clone https://github.com/CrowdStrike/foundry-sample-foundryjs-demo
+cd foundry-sample-foundryjs-demo
 ```
 
 Log in to Foundry:
@@ -64,10 +62,10 @@ foundry login
 
 Select the following permissions:
 
-- [ ] Create and run RTR scripts
+- [x] Create and run RTR scripts
 - [x] Create, execute and test workflow templates
 - [x] Create, run and view API integrations
-- [ ] Create, edit, delete, and list queries
+- [x] Create, edit, delete, and list queries
 
 Deploy the app:
 
@@ -84,11 +82,63 @@ Once the deployment has finished, you can release the app:
 foundry apps release
 ```
 
-Next, go to **Foundry** > **App catalog**, find your app, and install it. Go to **Fusion SOAR** > **Workflows** to see the scheduled workflow from this app.
+Next, go to **Foundry** > **App catalog**, find your app, and install it. Navigate to **Foundry** > **Apps** in your Falcon Console, find "Foundryjs Demo" in your app list, and click to open the interactive demonstration.
 
 ## About this sample app
 
-_Describe your app and its components._
+The **Foundryjs Demo** is a comprehensive reference implementation showcasing the full capabilities of the CrowdStrike Foundry JavaScript SDK. This sample application serves as both a learning resource and a practical starting point for developers building Foundry applications.
+
+### Key Components
+
+- **Interactive UI Pages**: Built with React 19, React Router 7, and Tailwind CSS, featuring the official Foundry JavaScript SDK and Falcon design system components
+- **Python Cloud Function**: A simple greeting function that demonstrates basic serverless capabilities with workflow integration
+- **API Integrations**: JSONPlaceholder demo API for testing external service integration
+- **Collections**: Demo collection for showcasing CRUD operations with structured data
+- **LogScale Queries**: Saved searches demonstrating user activity monitoring
+- **Workflows**: Simple greeting workflow template for automation examples
+
+### Features Demonstrated
+
+**Core API Features:**
+- **FalconApi Connection**: Initialize and establish connection to Falcon Console
+- **Event Handling**: Receive and process context data from Falcon Console
+- **Workflow Execution**: Execute on-demand workflows and retrieve results
+- **Collections CRUD**: Complete Create, Read, Update, Delete operations on Foundry Collections
+- **LogScale Integration**: Write events, execute dynamic queries, and run saved searches
+
+**Advanced Features:**
+- **API Integrations**: Call external APIs through configured OpenAPI specifications
+- **Cloud Functions**: Execute Foundry serverless functions with various HTTP methods
+- **Navigation Utilities**: Handle internal hash-based routing and external navigation
+- **Modal Management**: Open and close modals within the Falcon Console
+- **Error Handling**: Comprehensive error handling patterns and user feedback
+
+### Educational Value
+
+Each feature demonstration includes:
+- **Interactive Forms**: Input fields to test different parameters
+- **Example Buttons**: Pre-filled examples for quick testing
+- **Real-time Results**: Live display of API responses
+- **Error Handling**: Clear error messages and debugging information
+- **Code Examples**: Comprehensive documentation through working code
+
+### Target Audience
+
+This demo is designed for:
+- Developers new to the Foundry platform
+- Teams building custom Foundry applications
+- Security engineers exploring Foundry automation capabilities
+- Anyone seeking comprehensive SDK documentation through code examples
+
+### Technology Stack
+
+- **React 19** - Modern React with hooks and functional components
+- **React Router 7** - Client-side routing and navigation
+- **Tailwind CSS** - Utility-first CSS framework for styling
+- **@crowdstrike/foundry-js** - Official Foundry JavaScript SDK
+- **@crowdstrike/falcon-shoelace** - Falcon design system components
+- **@crowdstrike/tailwind-toucan-base** - Toucan design tokens
+- **Python 3.11** - Cloud function runtime for serverless operations
 
 ## Foundry resources
 

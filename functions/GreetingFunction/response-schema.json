@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Greeting Function Response",
+  "description": "Response schema for the greeting function",
+  "required": ["message", "name", "timestamp", "demo"],
+  "properties": {
+    "message": {
+      "type": "string",
+      "description": "The personalized greeting message",
+      "example": "Hello John Doe! Welcome to the Foundry Cloud Functions demo!"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name that was provided in the request",
+      "example": "John Doe"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the greeting was generated",
+      "example": "2024-01-01T00:00:00Z"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "Flag indicating this is a demo function",
+      "example": true
+    }
+  },
+  "additionalProperties": false
+}

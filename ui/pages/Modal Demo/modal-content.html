@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Modal Content</title>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@crowdstrike/foundry-js": "https://assets.foundry.crowdstrike.com/foundry-js@0.18.0/index.js"
+        }
+      }
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: calc(100vh - 48px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        h1 {
+            margin: 0 0 16px 0;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            opacity: 0.9;
+            margin-bottom: 24px;
+            font-size: 1.1rem;
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #fbbf24;
+        }
+        
+        pre {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .status {
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Foundry Modal Demo</h1>
+        <p class="subtitle">This is a demonstration of a Foundry modal page with interactive functionality.</p>
+        
+        <div class="info-section">
+            <div class="info-title">Modal Data Received:</div>
+            <pre id="modalData">Loading...</pre>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-title">Current URL:</div>
+            <pre id="currentUrl">Loading...</pre>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-title">Foundry Context:</div>
+            <pre id="falconStatus">Checking Falcon connection...</pre>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="closeModal()">
+                Close Modal
+            </button>
+            <button class="btn-success" onclick="closeWithData()">
+                Close with Success Data
+            </button>
+            <button class="btn-warning" onclick="updateParent()">
+                Send Data to Parent
+            </button>
+        </div>
+        
+        <div id="status" class="status hidden"></div>
+    </div>
+
+    <script type="module">
+        import FalconApi from '@crowdstrike/foundry-js';
+        
+        let falcon;
+        let modalData = {};
+        
+        // Initialize Falcon API
+        async function initializeFalcon() {
+            try {
+                falcon = new FalconApi();
+                await falcon.connect();
+                
+                // Get modal data if available
+                modalData = falcon.data || {};
+                
+                updateDisplay();
+                setStatus('✅ Connected to Falcon API', 'success');
+            } catch (error) {
+                console.error('Falcon initialization failed:', error);
+                setStatus('❌ Failed to connect to Falcon API: ' + error.message, 'error');
+                updateDisplay();
+            }
+        }
+        
+        function updateDisplay() {
+            // Update modal data display
+            document.getElementById('modalData').textContent = 
+                Object.keys(modalData).length > 0 
+                    ? JSON.stringify(modalData, null, 2)
+                    : 'No data passed to modal';
+            
+            // Update URL display
+            document.getElementById('currentUrl').textContent = window.location.href;
+            
+            // Update Falcon status
+            const falconInfo = {
+                connected: falcon?.isConnected || false,
+                hasData: Object.keys(modalData).length > 0,
+                foundryJsLoaded: true,
+                timestamp: new Date().toISOString()
+            };
+            document.getElementById('falconStatus').textContent = JSON.stringify(falconInfo, null, 2);
+        }
+        
+        function setStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.classList.remove('hidden');
+            
+            // Auto-hide after 3 seconds
+            setTimeout(() => {
+                statusEl.classList.add('hidden');
+            }, 3000);
+        }
+        
+        async function closeModal() {
+            try {
+                if (falcon?.ui?.closeModal) {
+                    await falcon.ui.closeModal();
+                    setStatus('✅ Modal closed successfully', 'success');
+                } else {
+                    setStatus('⚠️ Modal close functionality not available - close manually', 'warning');
+                }
+            } catch (error) {
+                console.error('Close modal error:', error);
+                setStatus('❌ Error closing modal: ' + error.message, 'error');
+            }
+        }
+        
+        async function closeWithData() {
+            try {
+                const returnData = {
+                    action: 'completed',
+                    result: 'success',
+                    data: {
+                        processedItems: 5,
+                        timestamp: new Date().toISOString(),
+                        userAction: 'save_and_close'
+                    },
+                    modalData: modalData
+                };
+                
+                if (falcon?.ui?.closeModal) {
+                    await falcon.ui.closeModal(returnData);
+                    setStatus('✅ Modal closed with data', 'success');
+                } else {
+                    setStatus('⚠️ Modal close functionality not available - close manually', 'warning');
+                    console.log('Return data would be:', returnData);
+                }
+            } catch (error) {
+                console.error('Close modal with data error:', error);
+                setStatus('❌ Error closing modal: ' + error.message, 'error');
+            }
+        }
+        
+        async function updateParent() {
+            try {
+                // Simulate sending data to parent without closing
+                const updateData = {
+                    type: 'status_update',
+                    message: 'Processing in progress...',
+                    progress: Math.floor(Math.random() * 100),
+                    timestamp: new Date().toISOString()
+                };
+                
+                console.log('Sending update to parent:', updateData);
+                setStatus('📤 Data sent to parent application', 'info');
+                
+                // You could use Falcon events here to communicate with parent
+                if (falcon?.events) {
+                    falcon.events.emit('modalUpdate', updateData);
+                } else {
+                    console.log('Falcon events not available, update data:', updateData);
+                }
+            } catch (error) {
+                console.error('Update parent error:', error);
+                setStatus('❌ Error updating parent: ' + error.message, 'error');
+            }
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add a small delay to ensure scripts are loaded
+            setTimeout(initializeFalcon, 100);
+        });
+        
+        // Update display every 5 seconds to show live data
+        setInterval(updateDisplay, 5000);
+
+        // Make functions globally accessible for onclick handlers
+        window.closeModal = closeModal;
+        window.closeWithData = closeWithData;
+        window.updateParent = updateParent;
+    </script>
+</body>
+</html>

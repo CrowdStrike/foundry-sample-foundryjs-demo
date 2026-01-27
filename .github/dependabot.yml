@@ -1,14 +1,19 @@
 version: 2
 updates:
-  - package-ecosystem: gomod
-    directories:
-      - "/functions/go-function/"
-    schedule:
-      interval: weekly
   - package-ecosystem: pip
-    directory: "/functions/python-function/"
+    directory: "/functions/GreetingFunction/"
     schedule:
       interval: weekly
+  - package-ecosystem: npm
+    directory: "/ui/pages/Foundry JS Demo/"
+    open-pull-requests-limit: 10
+    schedule:
+      interval: weekly
+    groups:
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
