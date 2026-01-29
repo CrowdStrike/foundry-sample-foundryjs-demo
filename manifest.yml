@@ -16,7 +16,7 @@ ui:
   extensions: []
   pages:
     foundry_js_demo:
-      name: Foundry JS SDK Demo
+      name: foundry-js JavaScript library Demo
       description: Comprehensive demo of all foundry-js features
       path: ui/pages/Foundry JS Demo/src/dist
       entrypoint: ui/pages/Foundry JS Demo/src/dist/index.html
@@ -31,8 +31,8 @@ ui:
         object-src: []
       permissions: []
     foundry_js_demo_modal:
-      name: Foundry JS Demo Modal
-      description: Interactive modal content for Foundry JS SDK demonstration
+      name: foundry-js Demo Modal
+      description: Interactive modal content for foundry-js library demonstration
       path: ui/pages/Modal Demo
       entrypoint: ui/pages/Modal Demo/modal-content.html
       content_security_policy:
@@ -102,7 +102,6 @@ logscale:
   saved_searches:
     - name: Recent User Logins
       description: Display the most recent 100 user login events with details
-      repo_or_view: foundry:applicationview
       query_path: queries/recent-user-logins.txt
       query_params: {}
       earliest: 24h
@@ -112,7 +111,7 @@ logscale:
           - demo
           - user-activity
           - logins
-        system_action: true
+        system_action: false
       include_test_data: false
 lookup_files: []
 docs: {}

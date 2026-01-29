@@ -11,13 +11,13 @@ This app is one of several App Templates included in Foundry that you can use to
 
 ## Description
 
-A comprehensive demonstration of the CrowdStrike Foundry JavaScript SDK (`@crowdstrike/foundry-js`) showcasing all major features and capabilities through an interactive web application. This demo provides working examples of core API features including FalconApi connection, event handling, workflow execution, collections CRUD operations, LogScale integration, API integrations, cloud functions, navigation utilities, modal management, and comprehensive error handling patterns.
+A comprehensive demonstration of the foundry-js JavaScript library (`@crowdstrike/foundry-js`) showcasing all major features and capabilities through an interactive web application. This demo provides working examples of core API features including FalconApi connection, event handling, workflow execution, collections CRUD operations, LogScale integration, API integrations, cloud functions, navigation utilities, modal management, and comprehensive error handling patterns.
 
 ## Prerequisites
 
 * The Foundry CLI (instructions below).
 * Node.js 18+ (needed if modifying the app's UI). See [Node.js](https://nodejs.org/) for installation instructions.
-* Python 3.11+ (needed if modifying the app's functions). See [Python For Beginners](https://www.python.org/about/gettingstarted/) for installation instructions.
+* Python 3.13+ (needed if modifying the app's functions). See [Python For Beginners](https://www.python.org/about/gettingstarted/) for installation instructions.
 
 ### Install the Foundry CLI
 
@@ -86,13 +86,13 @@ Next, go to **Foundry** > **App catalog**, find your app, and install it. Naviga
 
 ## About this sample app
 
-The **Foundryjs Demo** is a comprehensive reference implementation showcasing the full capabilities of the CrowdStrike Foundry JavaScript SDK. This sample application serves as both a learning resource and a practical starting point for developers building Foundry applications.
+The **Foundryjs Demo** is a comprehensive reference implementation showcasing the full capabilities of the foundry-js JavaScript library. This sample application serves as both a learning resource and a practical starting point for developers building Foundry applications.
 
 ### Key Components
 
-- **Interactive UI Pages**: Built with React 19, React Router 7, and Tailwind CSS, featuring the official Foundry JavaScript SDK and Falcon design system components
+- **Interactive UI Pages**: Built with React 19, React Router 7, and Tailwind CSS, featuring the official foundry-js JavaScript library
 - **Python Cloud Function**: A simple greeting function that demonstrates basic serverless capabilities with workflow integration
-- **API Integrations**: JSONPlaceholder demo API for testing external service integration
+- **API Integrations**: JSONPlaceholder API for testing external service integration
 - **Collections**: Demo collection for showcasing CRUD operations with structured data
 - **LogScale Queries**: Saved searches demonstrating user activity monitoring
 - **Workflows**: Simple greeting workflow template for automation examples
@@ -100,17 +100,17 @@ The **Foundryjs Demo** is a comprehensive reference implementation showcasing th
 ### Features Demonstrated
 
 **Core API Features:**
-- **FalconApi Connection**: Initialize and establish connection to Falcon Console
-- **Event Handling**: Receive and process context data from Falcon Console
+- **FalconApi Connection**: Initialize and establish connection to Falcon console
+- **Event Handling**: Receive and process context data from Falcon console
 - **Workflow Execution**: Execute on-demand workflows and retrieve results
-- **Collections CRUD**: Complete Create, Read, Update, Delete operations on Foundry Collections
+- **Collections CRUD**: Complete Create, Read, Update, Delete operations on Foundry collections
 - **LogScale Integration**: Write events, execute dynamic queries, and run saved searches
 
 **Advanced Features:**
 - **API Integrations**: Call external APIs through configured OpenAPI specifications
 - **Cloud Functions**: Execute Foundry serverless functions with various HTTP methods
 - **Navigation Utilities**: Handle internal hash-based routing and external navigation
-- **Modal Management**: Open and close modals within the Falcon Console
+- **Modal Management**: Open and close modals within the Falcon console
 - **Error Handling**: Comprehensive error handling patterns and user feedback
 
 ### Educational Value
@@ -129,16 +129,6 @@ This demo is designed for:
 - Teams building custom Foundry applications
 - Security engineers exploring Foundry automation capabilities
 - Anyone seeking comprehensive SDK documentation through code examples
-
-### Technology Stack
-
-- **React 19** - Modern React with hooks and functional components
-- **React Router 7** - Client-side routing and navigation
-- **Tailwind CSS** - Utility-first CSS framework for styling
-- **@crowdstrike/foundry-js** - Official Foundry JavaScript SDK
-- **@crowdstrike/falcon-shoelace** - Falcon design system components
-- **@crowdstrike/tailwind-toucan-base** - Toucan design tokens
-- **Python 3.11** - Cloud function runtime for serverless operations
 
 ## Foundry resources
 
