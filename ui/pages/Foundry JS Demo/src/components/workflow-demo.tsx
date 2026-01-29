@@ -9,7 +9,7 @@ interface PollAttempt {
 
 export function WorkflowDemo() {
   const { falcon } = useFalconApiContext();
-  const [workflowName, setWorkflowName] = useState('simple-greeting-workflow');
+  const [workflowName, setWorkflowName] = useState('Simple Greeting Workflow');
   const [parameters, setParameters] = useState('{\n  "user_name": "Developer"\n}');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any>(null);
@@ -22,7 +22,7 @@ export function WorkflowDemo() {
 
   // Reset to default values when component mounts
   useEffect(() => {
-    setWorkflowName('simple-greeting-workflow');
+    setWorkflowName('Simple Greeting Workflow');
     setParameters('{\n  "user_name": "Developer"\n}');
   }, []);
 
@@ -157,7 +157,7 @@ export function WorkflowDemo() {
       <div>
         <h2 className="text-2xl font-bold text-titles-and-attributes mb-2">Workflows Demo</h2>
         <p className="text-body-and-labels">
-          Execute on-demand workflows and retrieve execution results using our <strong>simple-greeting-workflow</strong> that accepts a name parameter and returns a personalized greeting.
+          Execute on-demand workflows and retrieve execution results using our <strong>Simple Greeting Workflow</strong> that accepts a name parameter and returns a personalized greeting.
         </p>
       </div>
 
@@ -174,7 +174,7 @@ export function WorkflowDemo() {
               type="text"
               value={workflowName}
               onChange={(e) => setWorkflowName(e.target.value)}
-              placeholder="simple-greeting-workflow"
+              placeholder="Simple Greeting Workflow"
               className="w-full px-3 py-2 border border-border-reg rounded-md focus:ring-primary-idle focus:border-primary-idle bg-surface-base text-titles-and-attributes"
             />
           </div>
@@ -328,7 +328,7 @@ export function WorkflowDemo() {
             <p className="text-xs ml-2">
               <strong>parameters</strong>: Workflow input data (e.g., <code className="bg-surface-md px-1 rounded">{'{'}"user_name": "Developer"{'}'}</code>)
               <br/>
-              <strong>config</strong>: Execution config with workflow name and depth (e.g., <code className="bg-surface-md px-1 rounded">{'{'}"name": "simple-greeting-workflow", "depth": 0{'}'}</code>)
+              <strong>config</strong>: Execution config with workflow name and depth (e.g., <code className="bg-surface-md px-1 rounded">{'{'}"name": "Simple Greeting Workflow", "depth": 0{'}'}</code>)
             </p>
           </div>
           <div>

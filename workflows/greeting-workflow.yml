@@ -1,4 +1,4 @@
-name: simple-greeting-workflow
+name: Simple Greeting Workflow
 description: A simple workflow that accepts a name parameter and returns a personalized greeting
 provision_on_install: true
 trigger:

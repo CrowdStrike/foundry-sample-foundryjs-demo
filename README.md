@@ -16,7 +16,7 @@ A comprehensive demonstration of the foundry-js JavaScript library (`@crowdstrik
 ## Prerequisites
 
 * The Foundry CLI (instructions below).
-* Node.js 18+ (needed if modifying the app's UI). See [Node.js](https://nodejs.org/) for installation instructions.
+* Node.js 22+ (needed if modifying the app's UI). See [Node.js](https://nodejs.org/) for installation instructions.
 * Python 3.13+ (needed if modifying the app's functions). See [Python For Beginners](https://www.python.org/about/gettingstarted/) for installation instructions.
 
 ### Install the Foundry CLI
