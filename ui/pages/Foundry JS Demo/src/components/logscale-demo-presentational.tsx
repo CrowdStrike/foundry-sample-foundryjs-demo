@@ -28,6 +28,7 @@ interface LogScaleDemoUIProps {
   onClearResults?: () => void;
   onUpdateEventTimestamp?: () => void;
   falcon?: any;
+  appId: string;
 }
 
 /**
@@ -35,6 +36,8 @@ interface LogScaleDemoUIProps {
  * Pure component that only accepts props - no context dependencies
  */
 export function LogScaleDemoUI({
+  appId, 
+
   // Tab state
   activeTab = 'write',
   onTabChange = () => {},
@@ -210,7 +213,7 @@ export function LogScaleDemoUI({
                   <li>
                     1. Navigate to{' '}
                     <a
-                      href="https://falcon.dodo.crowdstrike.black/foundry/app-builder/ba511b20f29e426588b406dbaa16fc9b/draft/data"
+                      href={`/foundry/app-builder/${appId}/draft/data`}
                       onClick={(e) => {
                         e.preventDefault();
                         if (falcon?.navigation?.onClick) {

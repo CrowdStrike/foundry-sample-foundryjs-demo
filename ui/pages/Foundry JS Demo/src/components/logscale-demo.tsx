@@ -130,6 +130,8 @@ export function LogScaleDemo() {
 
   return (
     <LogScaleDemoUI
+      appId={falcon.appId ?? ""}
+      
       // Tab state
       activeTab={activeTab}
       onTabChange={handleTabChange}

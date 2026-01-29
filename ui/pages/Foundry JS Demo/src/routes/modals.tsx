@@ -54,16 +54,23 @@ export function Modals() {
   const [error, setError] = useState<string | null>(null);
 
   const openModal = async () => {
-    if (!falcon?.ui?.openModal) {
-      setError("Modal functionality not available");
-      return;
-    }
-
     setLoading(true);
     setError(null);
     setResults(null);
 
     try {
+      if (!falcon?.ui?.openModal) {
+        throw new Error("Modal functionality not available");
+      }
+
+      // Validate Page ID format (should be a 32-character UUID without dashes)
+      const pageId = modalConfig.id.trim();
+      if (!pageId || pageId.length !== 32) {
+        throw new Error(
+          "Invalid Page ID format. Check your manifest.yml for the correct page ID."
+        );
+      }
+
       let modalData = {};
       if (modalConfig.data.trim()) {
         modalData = JSON.parse(modalConfig.data);
@@ -86,7 +93,7 @@ export function Modals() {
       const result = await falcon.ui.openModal(
         {
           id: modalConfig.id.trim(),
-          type: modalConfig.type as 'page',
+          type: modalConfig.type as "page",
         },
         modalConfig.title.trim(),
         modalOptions
@@ -100,7 +107,8 @@ export function Modals() {
       });
     } catch (err) {
       console.error("Modal error:", err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to open modal';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to open modal";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -122,7 +130,8 @@ export function Modals() {
       });
     } catch (err) {
       console.error("Modal close error:", err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to close modal';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to close modal";
       setError(errorMessage);
     }
   };
