@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Demo Item",
+  "description": "Schema for demo items showcasing common data types and structures",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the item",
+      "x-cs-indexable": true
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the item",
+      "minLength": 1,
+      "maxLength": 200,
+      "x-cs-indexable": true
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the item",
+      "maxLength": 1000
+    },
+    "status": {
+      "type": "string",
+      "description": "Current status of the item",
+      "enum": ["active", "inactive", "pending", "archived"],
+      "x-cs-indexable": true
+    },
+    "priority": {
+      "type": "string",
+      "description": "Priority level",
+      "enum": ["low", "medium", "high", "critical"],
+      "x-cs-indexable": true
+    },
+    "category": {
+      "type": "string",
+      "description": "Item category",
+      "x-cs-indexable": true
+    },
+    "tags": {
+      "type": "array",
+      "description": "List of tags associated with the item",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp",
+      "x-cs-indexable": true
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last update timestamp",
+      "x-cs-indexable": true
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional flexible metadata",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Item author or creator"
+        },
+        "department": {
+          "type": "string",
+          "description": "Associated department"
+        },
+        "external_id": {
+          "type": "string",
+          "description": "External system identifier"
+        }
+      },
+      "additionalProperties": true
+    },
+    "is_active": {
+      "type": "boolean",
+      "description": "Whether the item is currently active",
+      "x-cs-indexable": true
+    },
+    "score": {
+      "type": "number",
+      "description": "Numeric score or rating",
+      "minimum": 0,
+      "maximum": 100
+    }
+  },
+  "required": ["id", "name", "status", "created_at"],
+  "additionalProperties": false
+}

@@ -1,0 +1,124 @@
+name: Foundryjs Demo
+description: Comprehensive demo of foundry-js library functionality
+logo: ""
+vendor: ""
+vendor_products: []
+use_case: ""
+manifest_version: "2023-05-09"
+ignored:
+  - .+/node_modules$
+  - .+/node_modules/.+
+  - .+/venv$
+  - .+/venv/.+
+  - ui/pages/.*/config/.*
+  - e2e
+  - e2e/.+
+  - .*/test_.*\.py$
+  - \.pytest_cache
+  - .*/\.pytest_cache/.*
+  - ui/(extensions|pages)/.*/__tests__/.*
+  - ui/(extensions|pages)/.*/.*\.test\..*
+ui:
+  homepage: pages.foundry_js_demo
+  extensions: []
+  pages:
+    foundry_js_demo:
+      name: foundry-js JavaScript library Demo
+      description: Comprehensive demo of all foundry-js features
+      path: ui/pages/Foundry JS Demo/src/dist
+      entrypoint: ui/pages/Foundry JS Demo/src/dist/index.html
+      content_security_policy:
+        connect-src: []
+        style-src: []
+        style-src-elem: []
+        script-src: []
+        form-action: []
+        img-src: []
+        media-src: []
+        object-src: []
+      permissions: []
+    foundry_js_demo_modal:
+      name: foundry-js Demo Modal
+      description: Interactive modal content for foundry-js library demonstration
+      path: ui/pages/Modal Demo
+      entrypoint: ui/pages/Modal Demo/modal-content.html
+      content_security_policy:
+        connect-src: []
+        style-src: []
+        style-src-elem: []
+        script-src: []
+        form-action: []
+        img-src: []
+        media-src: []
+        object-src: []
+      permissions: []
+  dashboards: {}
+  navigation: {}
+api_integrations:
+  - name: JSONPlaceholder Demo API
+    description: Free fake REST API for testing and prototyping
+    path: api-integrations/jsonplaceholder.json
+rtr_scripts: []
+collections:
+  - name: demo_items
+    description: Demo collection for showcasing CRUD operations with structured data
+    schema: collections/demo_items_schema.json
+    permissions: []
+    workflow_integration:
+      system_action: true
+      tags:
+        - demo
+        - crud
+        - foundry-js
+auth:
+  scopes:
+    - api-integrations:read
+    - app-logs:write
+    - app-logs:read
+  permissions: {}
+  roles: []
+functions:
+  - name: greeting_function
+    config: null
+    description: Simple greeting function that demonstrates basic Cloud Function capabilities
+    path: functions/GreetingFunction
+    environment_variables: {}
+    handlers:
+      - name: greet
+        description: Generate a personalized greeting message
+        method: POST
+        api_path: /greet
+        payload_type: ""
+        request_schema: request-schema.json
+        response_schema: response-schema.json
+        workflow_integration:
+          disruptive: false
+          system_action: false
+          tags:
+            - demo
+            - greeting
+            - foundry-js
+        permissions: []
+    language: python
+workflows:
+  - name: Simple Greeting Workflow
+    path: workflows/greeting-workflow.yml
+    permissions: []
+parsers: []
+logscale:
+  saved_searches:
+    - name: Recent User Logins
+      description: Display the most recent 100 user login events with details
+      query_path: queries/recent-user-logins.txt
+      query_params: {}
+      earliest: 24h
+      latest: now
+      workflow_integration:
+        tags:
+          - demo
+          - user-activity
+          - logins
+        system_action: false
+      include_test_data: false
+lookup_files: []
+docs: {}

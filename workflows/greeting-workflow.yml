@@ -1,0 +1,42 @@
+name: Simple Greeting Workflow
+description: A simple workflow that accepts a name parameter and returns a personalized greeting
+provision_on_install: true
+trigger:
+  next:
+    - CreateVariable
+  name: On demand
+  parameters:
+    properties:
+      user_name:
+        type: string
+    type: object
+  type: On demand
+
+actions:
+  CreateVariable:
+    next:
+      - UpdateVariable
+    id: 702d15788dbbffdf0b68d8e2f3599aa4
+    class: CreateVariable
+    properties:
+      variable_schema:
+        properties:
+          result:
+            type: string
+        type: object
+    version_constraint: ~1
+  UpdateVariable:
+    id: 6c6eab39063fa3b72d98c82af60deb8a
+    class: UpdateVariable
+    next:
+      - PrintData
+    properties:
+      WorkflowCustomVariable:
+        result: Hello, ${data['user_name']}! Welcome to the Foundry workflow demo.
+    version_constraint: ~1
+  PrintData:
+    id: aadbf530e35fc452a032f5f8acaaac2a
+    properties:
+      fields:
+        - ${WorkflowCustomVariable.result}
+    version_constraint: ~1
