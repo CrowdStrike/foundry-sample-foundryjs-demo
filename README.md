@@ -1,8 +1,8 @@
 ![CrowdStrike Falcon](/images/cs-logo.png?raw=true)
 
-# Foundryjs Demo sample Foundry app
+# Foundry-JS Demo sample Foundry app
 
-The Foundryjs Demo sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem. `foundry-sample-foundryjs-demo` is an open source project, not a CrowdStrike product. As such, it carries no formal support, expressed or implied.
+The Foundry-JS Demo sample Foundry app is a community-driven, open source project which serves as an example of an app which can be built using CrowdStrike's Foundry ecosystem. `foundry-sample-foundryjs-demo` is an open source project, not a CrowdStrike product. As such, it carries no formal support, expressed or implied.
 
 This app is one of several App Templates included in Foundry that you can use to jumpstart your development. It comes complete with a set of preconfigured capabilities aligned to its business purpose. Deploy this app from the Templates page with a single click in the Foundry UI, or create an app from this template using the CLI.
 
@@ -82,11 +82,11 @@ Once the deployment has finished, you can release the app:
 foundry apps release
 ```
 
-Next, go to **Foundry** > **App catalog**, find your app, and install it. Navigate to **Foundry** > **Apps** in your Falcon Console, find "Foundryjs Demo" in your app list, and click to open the interactive demonstration.
+Next, go to **Foundry** > **App catalog**, find your app, and install it. Navigate to **Foundry** > **Apps** in your Falcon Console, find "Foundry-JS Demo" in your app list, and click to open the interactive demonstration.
 
 ## About this sample app
 
-The **Foundryjs Demo** is a comprehensive reference implementation showcasing the full capabilities of the foundry-js JavaScript library. This sample application serves as both a learning resource and a practical starting point for developers building Foundry applications.
+The **Foundry-JS Demo** is a comprehensive reference implementation showcasing the full capabilities of the foundry-js JavaScript library. This sample application serves as both a learning resource and a practical starting point for developers building Foundry applications.
 
 ### Key Components
 
