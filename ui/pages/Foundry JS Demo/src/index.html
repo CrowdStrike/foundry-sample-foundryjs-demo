@@ -7,9 +7,27 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 
-<body class="theme-light bg-basement">
+<body class="bg-basement">
 
 <div id="app"></div>
+
+<script type="module">
+  function addThemeClass() {
+    const html = document.querySelector("html");
+    const themeIncluded =
+      html.classList.contains("theme-dark") ||
+      html.classList.contains("theme-light");
+
+    if (!themeIncluded) {
+      const isDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+
+      html.classList.add(isDarkMode ? "theme-dark" : "theme-light");
+    }
+  }
+  setTimeout(addThemeClass);
+</script>
 
 <script src="./app.tsx" type="module"></script>
 

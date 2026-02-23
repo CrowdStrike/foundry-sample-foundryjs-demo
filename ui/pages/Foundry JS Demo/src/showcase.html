@@ -20,7 +20,7 @@
     }
   </style>
 </head>
-<body class="theme-light bg-basement">
+<body class="bg-basement">
   <div id="root"></div>
 
   <script type="module">
@@ -40,6 +40,22 @@
     import { LogScaleDemoUI } from './components/logscale-demo-presentational.tsx';
     import { CloudFunctionsDemoUI } from './components/cloud-functions-demo-presentational.tsx';
     import { WorkflowsDemoUI } from './components/workflows-demo-presentational.tsx';
+
+    function addThemeClass() {
+      const html = document.querySelector("html");
+      const themeIncluded =
+        html.classList.contains("theme-dark") ||
+        html.classList.contains("theme-light");
+
+      if (!themeIncluded) {
+        const isDarkMode = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+
+        html.classList.add(isDarkMode ? "theme-dark" : "theme-light");
+      }
+    }
+    setTimeout(addThemeClass);
 
     // Navigation links data
     const navigationLinks = [
