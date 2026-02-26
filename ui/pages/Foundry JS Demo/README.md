@@ -1,4 +1,4 @@
-# Foundry JS SDK Demo
+# Foundry-JS SDK Demo
 
 Comprehensive demo application showcasing all foundry-js library functionality.
 

@@ -1,6 +1,6 @@
-name: Foundryjs Demo
-description: Comprehensive demo of foundry-js library functionality
-logo: ""
+name: Foundry-JS Demo
+description: Demonstrates features offered in the JavaScript library you can use to communicate with Foundry artifacts. Including events, navigation, modals, collections, API integrations, queries, functions and workflows.
+logo: images/logo.png
 vendor: ""
 vendor_products: []
 use_case: ""
@@ -23,7 +23,7 @@ ui:
   extensions: []
   pages:
     foundry_js_demo:
-      name: foundry-js JavaScript library Demo
+      name: Foundry-JS JavaScript library Demo
       description: Comprehensive demo of all foundry-js features
       path: ui/pages/Foundry JS Demo/src/dist
       entrypoint: ui/pages/Foundry JS Demo/src/dist/index.html
@@ -38,7 +38,7 @@ ui:
         object-src: []
       permissions: []
     foundry_js_demo_modal:
-      name: foundry-js Demo Modal
+      name: Foundry-JS Demo Modal
       description: Interactive modal content for foundry-js library demonstration
       path: ui/pages/Modal Demo
       entrypoint: ui/pages/Modal Demo/modal-content.html
