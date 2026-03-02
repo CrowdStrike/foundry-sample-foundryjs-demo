@@ -21,3 +21,11 @@ updates:
     ignore:
       - dependency-name: "actions/setup-node"
         versions: [">=6.2.0"]
+      - dependency-name: "actions/upload-artifact"
+        versions: [">=6.0.0"]
+      - dependency-name: "actions/checkout"
+        versions: [">=6.0.2"]
+      - dependency-name: "actions/setup-python"
+        versions: [">=6.1.0"]
+      - dependency-name: "pnpm/action-setup"
+        versions: [">=4.1.0"]
