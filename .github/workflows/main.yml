@@ -35,6 +35,12 @@ jobs:
       run: |
         python -c "import main; print('Function imports successfully')"
 
+    - name: Validate manifest.yml
+      run: |
+        pip install pyyaml
+        python -c "import yaml; yaml.safe_load(open('manifest.yml'))"
+        echo "manifest.yml is valid YAML"
+
   build-ui:
     name: Build UI
     runs-on: ubuntu-latest
@@ -80,23 +86,3 @@ jobs:
     - name: Build UI
       working-directory: 'ui/pages/Foundry JS Demo'
       run: pnpm run build
-
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f  # v7.0.0
-      with:
-        name: ui-build-artifacts
-        path: 'ui/pages/Foundry JS Demo/src/dist'
-        retention-days: 30
-
-  validate-manifest:
-    name: Validate Foundry Manifest
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-
-    - name: Validate manifest.yml
-      run: |
-        # Check if manifest.yml is valid YAML
-        python -c "import yaml; yaml.safe_load(open('manifest.yml'))"
-        echo "manifest.yml is valid YAML"
