@@ -72,17 +72,17 @@ jobs:
           ${{ runner.os }}-pnpm-store-
 
     - name: Install dependencies
-      working-directory: 'ui/pages/Foundry JS Demo'
+      working-directory: ui/pages/foundryjs-demo
       run: pnpm install --frozen-lockfile
 
     - name: Run linter
-      working-directory: 'ui/pages/Foundry JS Demo'
+      working-directory: ui/pages/foundryjs-demo
       run: pnpm run lint
 
     - name: Run tests
-      working-directory: 'ui/pages/Foundry JS Demo'
+      working-directory: ui/pages/foundryjs-demo
       run: pnpm test
 
     - name: Build UI
-      working-directory: 'ui/pages/Foundry JS Demo'
+      working-directory: ui/pages/foundryjs-demo
       run: pnpm run build
