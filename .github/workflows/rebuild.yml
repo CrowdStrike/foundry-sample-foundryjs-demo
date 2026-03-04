@@ -39,13 +39,13 @@ jobs:
       - name: Check if rebuild needed
         id: check
         run: |
-          LAST_BUILD=$(git log -1 --format=%H -- 'ui/pages/Foundry JS Demo/src/dist/')
+          LAST_BUILD=$(git log -1 --format=%H -- ui/pages/foundryjs-demo/src/dist/)
           if [ -z "$LAST_BUILD" ]; then
             echo "skip=false" >> "$GITHUB_OUTPUT"
             echo "No previous build found, rebuilding"
             exit 0
           fi
-          CHANGES=$(git diff --name-only "$LAST_BUILD" HEAD -- 'ui/pages/Foundry JS Demo/package.json' 'ui/pages/Foundry JS Demo/pnpm-lock.yaml')
+          CHANGES=$(git diff --name-only "$LAST_BUILD" HEAD -- ui/pages/foundryjs-demo/package.json ui/pages/foundryjs-demo/pnpm-lock.yaml)
           if [ -z "$CHANGES" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
             echo "No dependency changes since last build, skipping"
@@ -57,11 +57,11 @@ jobs:
       - name: Install dependencies
         if: steps.check.outputs.skip != 'true'
         run: pnpm install --frozen-lockfile
-        working-directory: 'ui/pages/Foundry JS Demo'
+        working-directory: ui/pages/foundryjs-demo
       - name: Build React app
         if: steps.check.outputs.skip != 'true'
         run: pnpm build
-        working-directory: 'ui/pages/Foundry JS Demo'
+        working-directory: ui/pages/foundryjs-demo
       - name: Create commit
         if: steps.check.outputs.skip != 'true'
         run: |

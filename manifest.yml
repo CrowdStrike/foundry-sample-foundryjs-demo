@@ -25,8 +25,8 @@ ui:
     foundry_js_demo:
       name: Foundry-JS JavaScript library Demo
       description: Comprehensive demo of all foundry-js features
-      path: ui/pages/Foundry JS Demo/src/dist
-      entrypoint: ui/pages/Foundry JS Demo/src/dist/index.html
+      path: ui/pages/foundryjs-demo/src/dist
+      entrypoint: ui/pages/foundryjs-demo/src/dist/index.html
       content_security_policy:
         connect-src: []
         style-src: []
@@ -40,8 +40,8 @@ ui:
     foundry_js_demo_modal:
       name: Foundry-JS Demo Modal
       description: Interactive modal content for foundry-js library demonstration
-      path: ui/pages/Modal Demo
-      entrypoint: ui/pages/Modal Demo/modal-content.html
+      path: ui/pages/modal-demo
+      entrypoint: ui/pages/modal-demo/modal-content.html
       content_security_policy:
         connect-src: []
         style-src: []
@@ -53,7 +53,12 @@ ui:
         object-src: []
       permissions: []
   dashboards: {}
-  navigation: {}
+  navigation:
+    links:
+      - path: /
+        name: Foundry-JS Demo
+        permissions: []
+        ref: pages.foundry_js_demo
 api_integrations:
   - name: JSONPlaceholder Demo API
     description: Free fake REST API for testing and prototyping
