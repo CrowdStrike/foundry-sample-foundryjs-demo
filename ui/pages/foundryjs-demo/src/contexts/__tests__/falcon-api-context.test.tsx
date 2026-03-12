@@ -3,20 +3,23 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { FalconApiProvider, useFalconApiContext } from '../falcon-api-context.tsx';
 
 // Mock the FalconApi
+const mockConnect = vi.fn().mockResolvedValue(undefined);
+const mockDisconnect = vi.fn();
+
 vi.mock('@crowdstrike/foundry-js', () => {
   return {
-    default: vi.fn().mockImplementation(() => ({
-      connect: vi.fn().mockResolvedValue(undefined),
-      disconnect: vi.fn(),
-      isConnected: true,
-      events: {
+    default: class FalconApi {
+      connect = mockConnect;
+      disconnect = mockDisconnect;
+      isConnected = true;
+      events = {
         on: vi.fn(),
         off: vi.fn(),
-      },
-      navigation: {
+      };
+      navigation = {
         navigateTo: vi.fn(),
-      },
-    })),
+      };
+    },
   };
 });
 
@@ -108,15 +111,8 @@ describe('FalconApiContext', () => {
     });
 
     it('should handle connection errors gracefully', async () => {
-      // Mock connect to reject
-      const FalconApiMock = await import('@crowdstrike/foundry-js');
-      const mockConnect = vi.fn().mockRejectedValue(new Error('Connection failed'));
-
-      (FalconApiMock.default as any).mockImplementation(() => ({
-        connect: mockConnect,
-        isConnected: false,
-        events: { on: vi.fn(), off: vi.fn() },
-      }));
+      // Override connect to reject for this test
+      mockConnect.mockRejectedValueOnce(new Error('Connection failed'));
 
       const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 

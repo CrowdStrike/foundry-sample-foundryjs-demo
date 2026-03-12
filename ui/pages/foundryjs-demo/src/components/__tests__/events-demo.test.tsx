@@ -7,19 +7,19 @@ import { renderWithProviders } from '../../test-utils.tsx';
 // Mock the FalconApi
 vi.mock('@crowdstrike/foundry-js', () => {
   return {
-    default: vi.fn().mockImplementation(() => ({
-      connect: vi.fn().mockResolvedValue(undefined),
-      isConnected: true,
-      events: {
+    default: class FalconApi {
+      connect = vi.fn().mockResolvedValue(undefined);
+      isConnected = true;
+      events = {
         on: vi.fn(),
         off: vi.fn(),
-      },
-      data: {
+      };
+      data = {
         user: {
           username: 'test-user',
         },
-      },
-    })),
+      };
+    },
   };
 });
 
