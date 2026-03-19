@@ -78,14 +78,19 @@ export class FoundryJsDemoPage extends BasePage {
       throw new Error(`App '${appName}' not found in Custom apps menu after 5 attempts with page refresh`);
     }
 
-    // Click the app name button to expand its pages list
+    // Expand the app menu only if not already expanded
     const appButton = this.page.getByRole('button', { name: appName, exact: true });
     await appButton.waitFor({ state: 'visible', timeout: 10000 });
-    await appButton.click();
+    const isExpanded = await appButton.getAttribute('aria-expanded');
+    if (isExpanded !== 'true') {
+      await appButton.click();
+      await this.waiter.delay(1500);
+    }
 
     // Click the page link inside the expanded app section
     const pageLink = this.page.getByRole('link', { name: appName });
-    await this.smartClick(pageLink, `App '${appName}' page link`);
+    await pageLink.waitFor({ state: 'visible', timeout: 20000 });
+    await pageLink.click();
 
     // Wait for the iframe to load
     await this.page.waitForLoadState('networkidle');
