@@ -26,6 +26,7 @@ export class FoundryJsDemoPage extends BasePage {
   /**
    * Navigate to the app via the sidebar Custom Apps section.
    * Sidebar flow: Menu → Custom apps → App name (expands) → Page link
+   * Retries with page refresh if Custom apps menu or app button doesn't appear.
    */
   async navigateToApp(): Promise<void> {
     this.logger.step('Navigate to Foundry-JS Demo app');
@@ -34,18 +35,53 @@ export class FoundryJsDemoPage extends BasePage {
 
     // Navigate to Foundry home first
     await this.navigateToPath('/foundry/home', 'Foundry home page');
+    await this.page.waitForLoadState('networkidle');
 
-    // Open the global sidebar via the hamburger menu
-    const menuButton = this.page.getByTestId('nav-trigger');
-    await this.smartClick(menuButton, 'Menu button');
+    // Retry with page refresh if Custom apps menu or app button doesn't appear
+    let appFound = false;
+    for (let attempt = 1; attempt <= 5; attempt++) {
+      const menuButton = this.page.getByTestId('nav-trigger');
+      await menuButton.waitFor({ state: 'visible', timeout: 30000 });
+      await menuButton.click();
+      await this.page.waitForLoadState('networkidle');
 
-    // Click "Custom apps" in the sidebar to expand the section
-    const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
-    await this.smartClick(customAppsButton, 'Custom apps button');
+      const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
+      try {
+        await customAppsButton.waitFor({ state: 'visible', timeout: 20000 });
+        await customAppsButton.click();
+        await this.waiter.delay(1500);
+        this.logger.info(`Custom apps button found on attempt ${attempt}`);
+      } catch (e) {
+        this.logger.warn(`Custom apps not visible on attempt ${attempt}, refreshing page...`);
+        await this.page.reload();
+        await this.page.waitForLoadState('networkidle');
+        await this.waiter.delay(3000);
+        continue;
+      }
+
+      // Check if the app button appears in the submenu
+      const appButton = this.page.getByRole('button', { name: appName, exact: true });
+      try {
+        await appButton.waitFor({ state: 'visible', timeout: 10000 });
+        appFound = true;
+        this.logger.info(`App '${appName}' found in Custom apps menu on attempt ${attempt}`);
+        break;
+      } catch (e) {
+        this.logger.warn(`App '${appName}' not in Custom apps on attempt ${attempt}, refreshing page...`);
+        await this.page.reload();
+        await this.page.waitForLoadState('networkidle');
+        await this.waiter.delay(3000);
+        continue;
+      }
+    }
+    if (!appFound) {
+      throw new Error(`App '${appName}' not found in Custom apps menu after 5 attempts with page refresh`);
+    }
 
     // Click the app name button to expand its pages list
     const appButton = this.page.getByRole('button', { name: appName, exact: true });
-    await this.smartClick(appButton, `App '${appName}' button`);
+    await appButton.waitFor({ state: 'visible', timeout: 10000 });
+    await appButton.click();
 
     // Click the page link inside the expanded app section
     const pageLink = this.page.getByRole('link', { name: appName });
