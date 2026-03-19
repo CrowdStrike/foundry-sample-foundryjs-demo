@@ -87,8 +87,11 @@ export class FoundryJsDemoPage extends BasePage {
       await this.waiter.delay(1500);
     }
 
-    // Click the page link inside the expanded app section
-    const pageLink = this.page.getByRole('link', { name: appName });
+    // Click the first page link inside the expanded app section.
+    // The link text is the PAGE name (from manifest), not the app name,
+    // so we locate the list labeled by the app button and click its first link.
+    const appList = this.page.getByRole('list', { name: appName });
+    const pageLink = appList.getByRole('link').first();
     await pageLink.waitFor({ state: 'visible', timeout: 20000 });
     await pageLink.click();
 
