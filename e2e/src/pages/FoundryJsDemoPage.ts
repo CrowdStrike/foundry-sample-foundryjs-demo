@@ -1,6 +1,7 @@
 import { Page, FrameLocator } from '@playwright/test';
 import { BasePage } from './BasePage';
 import { config } from '../config/TestConfig';
+import { RetryHandler } from '../utils/SmartWaiter';
 
 /**
  * Main page object for the Foundry-JS Demo app.
@@ -32,30 +33,40 @@ export class FoundryJsDemoPage extends BasePage {
 
     const appName = config.appName;
 
-    // Navigate to Foundry home first
-    await this.navigateToPath('/foundry/home', 'Foundry home page');
+    return RetryHandler.withPlaywrightRetry(
+      async () => {
+        // Navigate to Foundry home first
+        await this.navigateToPath('/foundry/home', 'Foundry home page');
 
-    // Open the global sidebar via the hamburger menu
-    const menuButton = this.page.getByTestId('nav-trigger');
-    await this.smartClick(menuButton, 'Menu button');
+        // Open the global sidebar via the hamburger menu
+        const menuButton = this.page.getByTestId('nav-trigger');
+        await this.smartClick(menuButton, 'Menu button');
 
-    // Click "Custom apps" in the sidebar to expand the section
-    const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
-    await this.smartClick(customAppsButton, 'Custom apps button');
+        // Click "Custom apps" in the sidebar to expand the section
+        const customAppsButton = this.page.getByRole('button', { name: 'Custom apps' });
+        await this.smartClick(customAppsButton, 'Custom apps button');
 
-    // Click the app name button to expand its pages list
-    const appButton = this.page.getByRole('button', { name: appName, exact: true });
-    await this.smartClick(appButton, `App '${appName}' button`);
+        // Click the app name button to expand its pages list
+        const appButton = this.page.getByRole('button', { name: appName, exact: false }).first();
+        if (await this.elementExists(appButton, 3000)) {
+          await this.smartClick(appButton, `App '${appName}' button`);
+          await this.waiter.delay(1000);
+        } else {
+          throw new Error(`App '${appName}' not found in Custom Apps menu`);
+        }
 
-    // Click the page link inside the expanded app section
-    const pageLink = this.page.getByRole('link', { name: appName });
-    await this.smartClick(pageLink, `App '${appName}' page link`);
+        // Click the page link inside the expanded app section
+        const pageLink = this.page.getByRole('link', { name: appName });
+        await this.smartClick(pageLink, `App '${appName}' page link`);
 
-    // Wait for the iframe to load
-    await this.page.waitForLoadState('networkidle');
-    await this.waiter.delay(2000);
+        // Wait for the iframe to load
+        await this.page.waitForLoadState('networkidle');
+        await this.waiter.delay(2000);
 
-    this.logger.success('Navigated to Foundry-JS Demo app');
+        this.logger.success('Navigated to Foundry-JS Demo app');
+      },
+      'Navigate to Foundry-JS Demo app'
+    );
   }
 
   /**
