@@ -29,5 +29,7 @@ updates:
         versions: [">=6.3.0"]
       - dependency-name: "pnpm/action-setup"
         versions: [">=4.3.0"]
+      - dependency-name: "actions/cache"
+        versions: [">=5.0.4"]
       - dependency-name: "peter-evans/create-pull-request"
         versions: [">=8.0.0"]
