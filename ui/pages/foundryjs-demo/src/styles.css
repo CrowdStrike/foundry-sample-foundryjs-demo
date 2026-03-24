@@ -8,7 +8,7 @@ a {
 /* Sidebar styling */
 .sidebar-nav {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 #f1f5f9;
+  scrollbar-color: var(--border-reg) var(--basement);
 }
 
 .sidebar-nav::-webkit-scrollbar {
@@ -16,16 +16,16 @@ a {
 }
 
 .sidebar-nav::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--basement);
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-reg);
   border-radius: 2px;
 }
 
 .sidebar-nav::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--body-and-labels);
 }
 
 /* Sidebar transition improvements */
@@ -45,7 +45,7 @@ a {
   top: 0;
   bottom: 0;
   width: 3px;
-  background-color: #3b82f6;
+  background-color: var(--link-color);
   border-radius: 0 2px 2px 0;
 }
 
@@ -61,17 +61,17 @@ a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--basement);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-reg);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--body-and-labels);
 }
 
 /* Loading animation improvements */
@@ -161,7 +161,7 @@ button:disabled {
 
 /* Section headers */
 .section-header {
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 2px solid var(--border-reg);
   padding-bottom: 0.5rem;
   margin-bottom: 1rem;
 }
@@ -177,20 +177,20 @@ button:disabled {
 
 /* Syntax highlighting for code blocks */
 .json-key {
-  color: #0369a1;
+  color: var(--link-color);
   font-weight: 600;
 }
 
 .json-string {
-  color: #059669;
+  color: var(--status-success);
 }
 
 .json-number {
-  color: #dc2626;
+  color: var(--critical);
 }
 
 .json-boolean {
-  color: #7c2d12;
+  color: var(--status-warning);
   font-weight: 600;
 }
 
@@ -204,12 +204,12 @@ button:disabled {
 .data-table td {
   padding: 0.75rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border-reg);
 }
 
 .data-table th {
   font-weight: 600;
-  background-color: #f8fafc;
+  background-color: var(--surface-base);
 }
 
 /* Toast notification styles (if needed) */
@@ -224,16 +224,16 @@ button:disabled {
 }
 
 .toast-success {
-  background-color: #10b981;
+  background-color: var(--status-success);
   color: white;
 }
 
 .toast-error {
-  background-color: #ef4444;
+  background-color: var(--critical);
   color: white;
 }
 
 .toast-info {
-  background-color: #3b82f6;
+  background-color: var(--link-color);
   color: white;
 }
