@@ -52,7 +52,10 @@
   },
   "pnpm": {
     "overrides": {
-      "flatted": "3.4.2"
+      "flatted": "3.4.2",
+      "picomatch@2": "2.3.2",
+      "picomatch@4": "4.0.4",
+      "brace-expansion@2": "2.0.3"
     }
   }
 }
