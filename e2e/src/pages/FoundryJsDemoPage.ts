@@ -141,7 +141,7 @@ export class FoundryJsDemoPage extends BasePage {
         await this.retryPageLoadAfter404();
       }
 
-      const iframe = this.page.locator('iframe');
+      const iframe = this.page.locator('iframe[name="portal"]');
       await iframe.waitFor({ state: 'visible', timeout: 30000 });
       await this.verifyPageLoaded();
       return true;
@@ -179,7 +179,7 @@ export class FoundryJsDemoPage extends BasePage {
    */
   getAppFrame(): FrameLocator {
     if (!this.appFrame) {
-      this.appFrame = this.page.frameLocator('iframe').first();
+      this.appFrame = this.page.frameLocator('iframe[name="portal"]').first();
     }
     return this.appFrame;
   }
