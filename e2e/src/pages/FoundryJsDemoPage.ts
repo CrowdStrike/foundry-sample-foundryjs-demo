@@ -33,7 +33,12 @@ export class FoundryJsDemoPage extends BasePage {
 
     const appName = config.appName;
 
-    // Navigate to Foundry home first
+    // Strategy 1: Try "Open app" from the App Catalog detail page
+    const openedViaCatalog = await this.tryOpenAppViaCatalog(appName);
+    if (openedViaCatalog) return;
+
+    // Strategy 2: Fall back to Custom Apps menu navigation
+    this.logger.info('Falling back to Custom Apps menu navigation');
     await this.navigateToPath('/foundry/home', 'Foundry home page');
     await this.page.waitForLoadState('networkidle');
 
@@ -103,12 +108,78 @@ export class FoundryJsDemoPage extends BasePage {
   }
 
   /**
+   * Try to open the app via the "Open app" button on its App Catalog detail page.
+   * Returns true if successful, false if the button wasn't available.
+   */
+  private async tryOpenAppViaCatalog(appName: string): Promise<boolean> {
+    try {
+      this.logger.info('Trying to open app via App Catalog "Open app" button');
+      const baseUrl = this.getBaseURL();
+      const filterParam = encodeURIComponent(`name:~'${appName}'`);
+      await this.page.goto(`${baseUrl}/foundry/app-catalog?filter=${filterParam}`);
+      await this.page.waitForLoadState('domcontentloaded');
+
+      const appLink = this.page.getByRole('link', { name: appName, exact: true });
+      await appLink.waitFor({ state: 'visible', timeout: 15000 });
+      await appLink.click();
+
+      const openAppButton = this.page.getByRole('button', { name: 'Open app' });
+      await openAppButton.waitFor({ state: 'visible', timeout: 10000 });
+
+      // Set up response listener BEFORE clicking to capture the page entity response
+      const pageEntityResponse = this.page.waitForResponse(
+        (resp) => resp.url().includes('/api2/ui-extensions/entities/pages/v1'),
+        { timeout: 15000 }
+      );
+      await openAppButton.click();
+      this.logger.success('Clicked "Open app" button from App Catalog');
+
+      // Wait for the page entity response and check for 404
+      const response = await pageEntityResponse;
+      if (response.status() === 404) {
+        this.logger.warn('Page entity returned 404, retrying with reload...');
+        await this.retryPageLoadAfter404();
+      }
+
+      const iframe = this.page.locator('iframe[name="portal"]');
+      await iframe.waitFor({ state: 'visible', timeout: 30000 });
+      await this.verifyPageLoaded();
+      return true;
+    } catch (e) {
+      this.logger.warn(`"Open app" button not available: ${(e as Error).message}`);
+      return false;
+    }
+  }
+
+  /**
+   * Retry page load after a 404 on the page entity endpoint.
+   * The service sometimes needs a moment to register newly deployed pages.
+   */
+  private async retryPageLoadAfter404(maxRetries = 3): Promise<void> {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const retryResponse = this.page.waitForResponse(
+        (resp) => resp.url().includes('/api2/ui-extensions/entities/pages/v1'),
+        { timeout: 15000 }
+      );
+      await this.page.reload();
+      await this.page.waitForLoadState('domcontentloaded');
+
+      const response = await retryResponse;
+      if (response.status() !== 404) {
+        this.logger.success(`Page entity returned ${response.status()} on retry ${attempt}`);
+        return;
+      }
+      this.logger.warn(`Page entity still 404 on retry ${attempt}/${maxRetries}`);
+    }
+  }
+
+  /**
    * Get the app's iframe FrameLocator.
    * The foundryjs-demo app renders entirely inside an iframe in the Falcon Console.
    */
   getAppFrame(): FrameLocator {
     if (!this.appFrame) {
-      this.appFrame = this.page.frameLocator('iframe').first();
+      this.appFrame = this.page.frameLocator('iframe[name="portal"]').first();
     }
     return this.appFrame;
   }
