@@ -17,7 +17,7 @@ interface EventsContextType {
   clearEvents: () => void;
   getEventsByType: (eventType: string) => Event[];
   getRecentEvents: (minutesAgo?: number) => Event[];
-  triggerTestEvent: () => Event;
+  sendBroadcast: () => void;
   eventCount: number;
   latestEvent: Event | null;
 }
@@ -76,16 +76,18 @@ function EventsProvider({ children }: EventsProviderProps) {
     return events.filter(event => new Date(event.timestamp) > cutoffTime);
   };
 
-  // Trigger a test event for demonstration
-  const triggerTestEvent = (): Event => {
-    const testData = {
-      message: 'This is a test event',
+  // Send a broadcast message to other extensions of the same app
+  const sendBroadcast = (): void => {
+    if (!falcon) return;
+
+    const payload = {
+      message: 'This is a test broadcast event',
       timestamp: new Date().toISOString(),
-      userId: falcon?.data?.user?.username || 'demo-user',
+      userId: falcon.data?.user?.username || 'demo-user',
       source: 'manual_trigger'
     };
-    
-    return addEvent('test-event', testData);
+
+    falcon.sendBroadcast(payload);
   };
 
   // Set up Falcon event listeners
@@ -98,8 +100,8 @@ function EventsProvider({ children }: EventsProviderProps) {
     // If falcon exists but not connected, try to listen anyway for demo purposes
     const eventHandlers = new Map();
 
-    // Listen to all common falcon events
-    const eventTypes = ['data', 'connect', 'disconnect', 'error', 'navigation'];
+    // Listen to the two real falcon events: 'data' and 'broadcast'
+    const eventTypes = ['data', 'broadcast'];
     
     try {
       eventTypes.forEach(eventType => {
@@ -141,7 +143,7 @@ function EventsProvider({ children }: EventsProviderProps) {
     clearEvents,
     getEventsByType,
     getRecentEvents,
-    triggerTestEvent,
+    sendBroadcast,
     // Utility functions
     eventCount: events.length,
     latestEvent: events.length > 0 ? events[0] : null

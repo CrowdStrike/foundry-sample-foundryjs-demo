@@ -15,9 +15,9 @@ interface EventsDemoUIProps {
   events?: Event[];
   eventCount?: number;
   recentEventsCount?: number;
-  testEventsCount?: number;
+  broadcastEventsCount?: number;
   connectionStatus?: ConnectionStatus;
-  onTriggerTestEvent?: () => void;
+  onSendBroadcast?: () => void;
   onClearEvents?: () => void;
 }
 
@@ -30,7 +30,7 @@ export function EventsDemoUI({
   events = [],
   eventCount = 0,
   recentEventsCount = 0,
-  testEventsCount = 0,
+  broadcastEventsCount = 0,
 
   // Status
   connectionStatus = {
@@ -40,7 +40,7 @@ export function EventsDemoUI({
   },
 
   // Handlers
-  onTriggerTestEvent = () => {},
+  onSendBroadcast = () => {},
   onClearEvents = () => {},
 }: EventsDemoUIProps) {
   return (
@@ -67,9 +67,11 @@ export function EventsDemoUI({
       <div className="space-y-6">
         <p className="text-body-and-labels leading-relaxed">
           This demo shows how to listen for events from the Falcon Console.
-          Events are automatically captured when the context changes (like
-          navigating to different detections, incidents, etc.). Events are
-          managed at the application level and shared across all components.
+          The <code className="bg-surface-md px-1 py-0.5 rounded">data</code> event fires when context changes (like
+          navigating to different detections, incidents, etc.). The{" "}
+          <code className="bg-surface-md px-1 py-0.5 rounded">broadcast</code> event allows communication between
+          different extensions of the same app. Events are managed at the
+          application level and shared across all components.
         </p>
 
         {/* Event Statistics */}
@@ -89,19 +91,19 @@ export function EventsDemoUI({
             </p>
           </div>
           <div className="bg-surface-base border border-border-reg rounded-xl p-5 shadow-base transition-shadow card-hover">
-            <h4 className="font-semibold text-body-and-labels">Test Events</h4>
+            <h4 className="font-semibold text-body-and-labels">Broadcast Events</h4>
             <p className="text-3xl font-bold text-titles-and-attributes mt-2">
-              {testEventsCount}
+              {broadcastEventsCount}
             </p>
           </div>
         </div>
 
         <div className="flex gap-3">
           <button
-            onClick={onTriggerTestEvent}
+            onClick={onSendBroadcast}
             className="px-5 py-2 bg-primary-idle text-surface-base rounded-lg transition-colors shadow-sm font-medium button-primary"
           >
-            Trigger Test Event
+            Send Broadcast
           </button>
           <button
             onClick={onClearEvents}
@@ -121,7 +123,7 @@ export function EventsDemoUI({
             {events.length === 0 ? (
               <div className="p-4 text-body-and-labels text-center">
                 No events captured yet. Events will appear here when received
-                from Falcon Console or when you trigger a test event.
+                from Falcon Console or from other extensions via broadcast.
               </div>
             ) : (
               events.map((event) => (
@@ -132,14 +134,10 @@ export function EventsDemoUI({
                   <div className="flex items-center justify-between mb-2">
                     <span
                       className={`font-semibold text-sm px-2 py-1 rounded ${
-                        event.type === "test-event"
+                        event.type === "broadcast"
                           ? "bg-purple text-surface-base"
                           : event.type === "data"
                           ? "bg-primary-idle text-surface-base"
-                          : event.type === "connect"
-                          ? "bg-positive text-surface-base"
-                          : event.type === "error"
-                          ? "bg-critical text-surface-base"
                           : "bg-surface-md text-body-and-labels"
                       }`}
                     >
@@ -187,16 +185,16 @@ export function EventsDemoUI({
             <li>
               •{" "}
               <code className="bg-surface-md px-2 py-0.5 rounded">
-                falcon.events.on('connect', handler)
+                falcon.events.on('broadcast', handler)
               </code>{" "}
-              - Listen for connection events
+              - Listen for messages from other extensions
             </li>
             <li>
               •{" "}
               <code className="bg-surface-md px-2 py-0.5 rounded">
-                falcon.events.on('navigation', handler)
+                falcon.sendBroadcast(payload)
               </code>{" "}
-              - Listen for navigation changes
+              - Send messages to other extensions of the same app
             </li>
             <li>
               •{" "}

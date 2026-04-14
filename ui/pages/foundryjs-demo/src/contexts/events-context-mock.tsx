@@ -16,7 +16,7 @@ interface EventsContextValue {
   clearEvents: () => void;
   getEventsByType: (eventType: string) => Event[];
   getRecentEvents: (minutesAgo?: number) => Event[];
-  triggerTestEvent: () => Event;
+  sendBroadcast: () => void;
   eventCount: number;
   latestEvent: Event | null;
 }
@@ -62,16 +62,8 @@ function EventsProvider({ children }: { children: ReactNode }) {
     return events.filter(event => new Date(event.timestamp) > cutoffTime);
   };
 
-  const triggerTestEvent = (): Event => {
-    const testData = {
-      message: 'This is a test event',
-      timestamp: new Date().toISOString(),
-      userId: 'mock-user',
-      source: 'manual_trigger'
-    };
-
-    return addEvent('test-event', testData);
-  };
+  // In mock mode, sendBroadcast is a no-op (no real Falcon SDK)
+  const sendBroadcast = (): void => {};
 
   const value: EventsContextValue = {
     events,
@@ -82,7 +74,7 @@ function EventsProvider({ children }: { children: ReactNode }) {
     clearEvents,
     getEventsByType,
     getRecentEvents,
-    triggerTestEvent,
+    sendBroadcast,
     eventCount: events.length,
     latestEvent: events.length > 0 ? events[0] : null
   };

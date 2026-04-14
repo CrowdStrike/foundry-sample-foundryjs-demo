@@ -13,7 +13,7 @@ describe('EventsDemoUI', () => {
   const mockEvents = [
     {
       id: 1,
-      type: 'test-event',
+      type: 'broadcast',
       timestamp: '2024-01-01T12:00:00Z',
       data: '{"message": "test"}',
     },
@@ -43,7 +43,7 @@ describe('EventsDemoUI', () => {
       <EventsDemoUI
         eventCount={10}
         recentEventsCount={5}
-        testEventsCount={3}
+        broadcastEventsCount={3}
         connectionStatus={mockConnectionStatus}
       />
     );
@@ -53,27 +53,27 @@ describe('EventsDemoUI', () => {
     expect(screen.getByText('3')).toBeInTheDocument();
   });
 
-  it('should render trigger test event button', () => {
+  it('should render send broadcast button', () => {
     render(<EventsDemoUI connectionStatus={mockConnectionStatus} />);
 
-    expect(screen.getByText('Trigger Test Event')).toBeInTheDocument();
+    expect(screen.getByText('Send Broadcast')).toBeInTheDocument();
   });
 
-  it('should call onTriggerTestEvent when button is clicked', async () => {
+  it('should call onSendBroadcast when button is clicked', async () => {
     const user = userEvent.setup();
-    const mockTrigger = vi.fn();
+    const mockBroadcast = vi.fn();
 
     render(
       <EventsDemoUI
         connectionStatus={mockConnectionStatus}
-        onTriggerTestEvent={mockTrigger}
+        onSendBroadcast={mockBroadcast}
       />
     );
 
-    const button = screen.getByText('Trigger Test Event');
+    const button = screen.getByText('Send Broadcast');
     await user.click(button);
 
-    expect(mockTrigger).toHaveBeenCalledOnce();
+    expect(mockBroadcast).toHaveBeenCalledOnce();
   });
 
   it('should call onClearEvents when clear button is clicked', async () => {
@@ -94,7 +94,7 @@ describe('EventsDemoUI', () => {
   });
 
   it('should display events list', () => {
-    render(
+    const { container } = render(
       <EventsDemoUI
         events={mockEvents}
         eventCount={2}
@@ -102,8 +102,9 @@ describe('EventsDemoUI', () => {
       />
     );
 
-    expect(screen.getByText('test-event')).toBeInTheDocument();
-    expect(screen.getByText('data')).toBeInTheDocument();
+    // Check event items are rendered
+    const eventItems = container.querySelectorAll('.event-item');
+    expect(eventItems).toHaveLength(2);
   });
 
   it('should show empty state when no events', () => {
@@ -135,7 +136,7 @@ describe('EventsDemoUI', () => {
   });
 
   it('should color code event types', () => {
-    render(
+    const { container } = render(
       <EventsDemoUI
         events={mockEvents}
         eventCount={2}
@@ -143,11 +144,15 @@ describe('EventsDemoUI', () => {
       />
     );
 
-    const testEventBadge = screen.getByText('test-event');
-    expect(testEventBadge).toHaveClass('bg-purple');
+    // Find badge spans inside event items
+    const eventItems = container.querySelectorAll('.event-item');
+    const firstBadge = eventItems[0].querySelector('span');
+    expect(firstBadge).toHaveClass('bg-purple');
+    expect(firstBadge?.textContent).toBe('broadcast');
 
-    const dataBadge = screen.getByText('data');
-    expect(dataBadge).toHaveClass('bg-primary-idle');
+    const secondBadge = eventItems[1].querySelector('span');
+    expect(secondBadge).toHaveClass('bg-primary-idle');
+    expect(secondBadge?.textContent).toBe('data');
   });
 
   it('should show event log count', () => {
