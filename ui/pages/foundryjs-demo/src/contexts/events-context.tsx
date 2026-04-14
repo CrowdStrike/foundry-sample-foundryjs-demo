@@ -88,6 +88,8 @@ function EventsProvider({ children }: EventsProviderProps) {
     };
 
     falcon.sendBroadcast(payload);
+    // Also record locally so the sender can see what was broadcast
+    addEvent('broadcast', payload);
   };
 
   // Set up Falcon event listeners

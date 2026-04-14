@@ -163,7 +163,7 @@ describe('EventsContext', () => {
       });
     });
 
-    it('should call sendBroadcast without adding to local events', async () => {
+    it('should call sendBroadcast and add a local broadcast event', async () => {
       const { result } = renderHook(() => useEventsContext(), { wrapper });
 
       await waitFor(() => {
@@ -175,8 +175,9 @@ describe('EventsContext', () => {
       });
 
       await waitFor(() => {
-        // sendBroadcast should NOT add an event to the local list
-        expect(result.current.events).toHaveLength(0);
+        // sendBroadcast should add a local event so the sender sees what was sent
+        expect(result.current.events).toHaveLength(1);
+        expect(result.current.events[0].type).toBe('broadcast');
       });
     });
 
