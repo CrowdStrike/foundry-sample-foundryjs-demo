@@ -7,7 +7,7 @@ export function EventsDemo() {
     events,
     isListening,
     clearEvents,
-    triggerTestEvent,
+    sendBroadcast,
     eventCount,
     getEventsByType,
     getRecentEvents,
@@ -30,16 +30,16 @@ export function EventsDemo() {
 
   const connectionStatus = getConnectionStatus();
   const recentEventsCount = getRecentEvents(60).length;
-  const testEventsCount = getEventsByType("test-event").length;
+  const broadcastEventsCount = getEventsByType("broadcast").length;
 
   return (
     <EventsDemoUI
       events={events}
       eventCount={eventCount}
       recentEventsCount={recentEventsCount}
-      testEventsCount={testEventsCount}
+      broadcastEventsCount={broadcastEventsCount}
       connectionStatus={connectionStatus}
-      onTriggerTestEvent={triggerTestEvent}
+      onSendBroadcast={sendBroadcast}
       onClearEvents={clearEvents}
     />
   );

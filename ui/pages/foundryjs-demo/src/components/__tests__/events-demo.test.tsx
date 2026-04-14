@@ -4,28 +4,35 @@ import userEvent from '@testing-library/user-event';
 import { EventsDemo } from '../events-demo.tsx';
 import { renderWithProviders } from '../../test-utils.tsx';
 
-// Mock the FalconApi
+// Store registered event handlers so tests can simulate incoming events
+const eventHandlers = new Map<string, (data: any) => void>();
+const mockSendBroadcast = vi.fn();
+
 vi.mock('@crowdstrike/foundry-js', () => {
   return {
-    default: class FalconApi {
-      connect = vi.fn().mockResolvedValue(undefined);
-      isConnected = true;
-      events = {
-        on: vi.fn(),
+    default: vi.fn().mockImplementation(() => ({
+      connect: vi.fn().mockResolvedValue(undefined),
+      isConnected: true,
+      sendBroadcast: mockSendBroadcast,
+      events: {
+        on: vi.fn((eventType: string, handler: (data: any) => void) => {
+          eventHandlers.set(eventType, handler);
+        }),
         off: vi.fn(),
-      };
-      data = {
+      },
+      data: {
         user: {
           username: 'test-user',
         },
-      };
-    },
+      },
+    })),
   };
 });
 
 describe('EventsDemo Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    eventHandlers.clear();
   });
 
   it('should render the component', async () => {
@@ -44,19 +51,34 @@ describe('EventsDemo Integration', () => {
     });
   });
 
-  it('should trigger test event when button is clicked', async () => {
+  it('should call falcon.sendBroadcast when button is clicked', async () => {
     const user = userEvent.setup();
     renderWithProviders(<EventsDemo />);
 
     await waitFor(() => {
-      expect(screen.getByText('Trigger Test Event')).toBeInTheDocument();
+      expect(screen.getByText('Send Broadcast')).toBeInTheDocument();
     });
 
-    const button = screen.getByText('Trigger Test Event');
+    const button = screen.getByText('Send Broadcast');
     await user.click(button);
 
+    expect(mockSendBroadcast).toHaveBeenCalledOnce();
+  });
+
+  it('should display events received via data listener', async () => {
+    renderWithProviders(<EventsDemo />);
+
     await waitFor(() => {
-      expect(screen.getByText('test-event')).toBeInTheDocument();
+      expect(eventHandlers.has('data')).toBe(true);
+    });
+
+    // Simulate an incoming data event from Falcon Console
+    const dataHandler = eventHandlers.get('data')!;
+    dataHandler({ user: 'test-user', theme: 'theme-dark' });
+
+    await waitFor(() => {
+      const eventItems = document.querySelectorAll('.event-item');
+      expect(eventItems.length).toBe(1);
     });
   });
 
@@ -65,15 +87,16 @@ describe('EventsDemo Integration', () => {
     renderWithProviders(<EventsDemo />);
 
     await waitFor(() => {
-      expect(screen.getByText('Trigger Test Event')).toBeInTheDocument();
+      expect(eventHandlers.has('data')).toBe(true);
     });
 
-    // Add an event
-    const triggerButton = screen.getByText('Trigger Test Event');
-    await user.click(triggerButton);
+    // Simulate an incoming event
+    const dataHandler = eventHandlers.get('data')!;
+    dataHandler({ user: 'test-user' });
 
     await waitFor(() => {
-      expect(screen.getByText('test-event')).toBeInTheDocument();
+      const eventItems = document.querySelectorAll('.event-item');
+      expect(eventItems.length).toBe(1);
     });
 
     // Clear events
@@ -81,13 +104,13 @@ describe('EventsDemo Integration', () => {
     await user.click(clearButton);
 
     await waitFor(() => {
-      expect(screen.queryByText('test-event')).not.toBeInTheDocument();
+      const eventItems = document.querySelectorAll('.event-item');
+      expect(eventItems).toHaveLength(0);
       expect(screen.getByText(/No events captured yet/i)).toBeInTheDocument();
     });
   });
 
   it('should display event counts', async () => {
-    const user = userEvent.setup();
     renderWithProviders(<EventsDemo />);
 
     await waitFor(() => {
@@ -98,11 +121,15 @@ describe('EventsDemo Integration', () => {
     const initialCounts = screen.getAllByText('0');
     expect(initialCounts.length).toBeGreaterThan(0);
 
-    // Add an event
-    const triggerButton = screen.getByText('Trigger Test Event');
-    await user.click(triggerButton);
+    // Simulate an incoming event
+    await waitFor(() => {
+      expect(eventHandlers.has('data')).toBe(true);
+    });
 
-    // Count should increase - look for the first "1" that appears
+    const dataHandler = eventHandlers.get('data')!;
+    dataHandler({ user: 'test-user' });
+
+    // Count should increase
     await waitFor(() => {
       const ones = screen.getAllByText('1');
       expect(ones.length).toBeGreaterThan(0);
@@ -119,19 +146,20 @@ describe('EventsDemo Integration', () => {
   });
 
   it('should display event data in JSON format', async () => {
-    const user = userEvent.setup();
     renderWithProviders(<EventsDemo />);
 
     await waitFor(() => {
-      expect(screen.getByText('Trigger Test Event')).toBeInTheDocument();
+      expect(eventHandlers.has('data')).toBe(true);
     });
 
-    const button = screen.getByText('Trigger Test Event');
-    await user.click(button);
+    // Simulate an incoming event with JSON data
+    const dataHandler = eventHandlers.get('data')!;
+    dataHandler({ user: 'test-user', theme: 'theme-dark' });
 
     await waitFor(() => {
-      // Event data should be displayed
-      expect(screen.getByText(/message/i)).toBeInTheDocument();
+      const preElements = document.querySelectorAll('.event-item pre');
+      expect(preElements.length).toBeGreaterThan(0);
+      expect(preElements[0].textContent).toContain('test-user');
     });
   });
 });

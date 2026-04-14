@@ -7,11 +7,12 @@ import { FalconApiProvider } from '../falcon-api-context.tsx';
 vi.mock('@crowdstrike/foundry-js', () => {
   const eventHandlers = new Map();
   return {
-    default: class FalconApi {
-      connect = vi.fn().mockResolvedValue(undefined);
-      isConnected = true;
-      events = {
-        on: vi.fn((eventType: string, handler: Function) => {
+    default: vi.fn().mockImplementation(() => ({
+      connect: vi.fn().mockResolvedValue(undefined),
+      isConnected: true,
+      sendBroadcast: vi.fn(),
+      events: {
+        on: vi.fn((eventType, handler) => {
           eventHandlers.set(eventType, handler);
         }),
         off: vi.fn((eventType: string) => {
@@ -21,13 +22,13 @@ vi.mock('@crowdstrike/foundry-js', () => {
           const handler = eventHandlers.get(eventType);
           if (handler) handler(data);
         }),
-      };
-      data = {
+      },
+      data: {
         user: {
           username: 'test-user',
         },
-      };
-    },
+      },
+    })),
   };
 });
 
@@ -162,20 +163,20 @@ describe('EventsContext', () => {
       });
     });
 
-    it('should trigger test event', async () => {
+    it('should call sendBroadcast without adding to local events', async () => {
       const { result } = renderHook(() => useEventsContext(), { wrapper });
 
       await waitFor(() => {
-        expect(result.current.triggerTestEvent).toBeDefined();
+        expect(result.current.sendBroadcast).toBeDefined();
       });
 
       act(() => {
-        result.current.triggerTestEvent();
+        result.current.sendBroadcast();
       });
 
       await waitFor(() => {
-        expect(result.current.events).toHaveLength(1);
-        expect(result.current.events[0].type).toBe('test-event');
+        // sendBroadcast should NOT add an event to the local list
+        expect(result.current.events).toHaveLength(0);
       });
     });
 
