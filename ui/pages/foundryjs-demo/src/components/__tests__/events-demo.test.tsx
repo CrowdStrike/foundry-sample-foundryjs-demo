@@ -10,22 +10,22 @@ const mockSendBroadcast = vi.fn();
 
 vi.mock('@crowdstrike/foundry-js', () => {
   return {
-    default: vi.fn().mockImplementation(() => ({
-      connect: vi.fn().mockResolvedValue(undefined),
-      isConnected: true,
-      sendBroadcast: mockSendBroadcast,
-      events: {
+    default: class FalconApi {
+      connect = vi.fn().mockResolvedValue(undefined);
+      isConnected = true;
+      sendBroadcast = mockSendBroadcast;
+      events = {
         on: vi.fn((eventType: string, handler: (data: any) => void) => {
           eventHandlers.set(eventType, handler);
         }),
         off: vi.fn(),
-      },
-      data: {
+      };
+      data = {
         user: {
           username: 'test-user',
         },
-      },
-    })),
+      };
+    },
   };
 });
 

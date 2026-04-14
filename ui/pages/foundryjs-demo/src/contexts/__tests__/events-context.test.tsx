@@ -7,12 +7,12 @@ import { FalconApiProvider } from '../falcon-api-context.tsx';
 vi.mock('@crowdstrike/foundry-js', () => {
   const eventHandlers = new Map();
   return {
-    default: vi.fn().mockImplementation(() => ({
-      connect: vi.fn().mockResolvedValue(undefined),
-      isConnected: true,
-      sendBroadcast: vi.fn(),
-      events: {
-        on: vi.fn((eventType, handler) => {
+    default: class FalconApi {
+      connect = vi.fn().mockResolvedValue(undefined);
+      isConnected = true;
+      sendBroadcast = vi.fn();
+      events = {
+        on: vi.fn((eventType: string, handler: Function) => {
           eventHandlers.set(eventType, handler);
         }),
         off: vi.fn((eventType: string) => {
@@ -22,13 +22,13 @@ vi.mock('@crowdstrike/foundry-js', () => {
           const handler = eventHandlers.get(eventType);
           if (handler) handler(data);
         }),
-      },
-      data: {
+      };
+      data = {
         user: {
           username: 'test-user',
         },
-      },
-    })),
+      };
+    },
   };
 });
 
