@@ -19,8 +19,8 @@ export class EventsTabPage {
     await this.frame.getByText('Events Handling Demo').waitFor({ timeout: 10000 });
   }
 
-  async triggerTestEvent(): Promise<void> {
-    const button = this.frame.getByRole('button', { name: 'Trigger Test Event' });
+  async sendBroadcast(): Promise<void> {
+    const button = this.frame.getByRole('button', { name: 'Send Broadcast' });
     await button.click();
   }
 

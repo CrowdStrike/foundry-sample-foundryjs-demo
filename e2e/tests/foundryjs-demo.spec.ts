@@ -23,8 +23,8 @@ test.describe('Foundry-JS Demo - E2E Tests', () => {
     await eventsTabPage.navigateTo();
     await eventsTabPage.verifyRendered();
 
-    await eventsTabPage.triggerTestEvent();
-    expect(await eventsTabPage.hasEventInLog('test')).toBeTruthy();
+    await eventsTabPage.sendBroadcast();
+    expect(await eventsTabPage.hasEventInLog('broadcast')).toBeTruthy();
 
     await eventsTabPage.clearEvents();
     expect(await eventsTabPage.hasNoEventsMessage()).toBeTruthy();
