@@ -1,9 +1,9 @@
 name: Foundry-JS Demo
 description: Demonstrates features offered in the JavaScript library you can use to communicate with Foundry artifacts. Including events, navigation, modals, collections, API integrations, queries, functions and workflows.
 logo: images/logo.png
-vendor: ""
-vendor_products: []
-use_case: ""
+vendor: "CrowdStrike"
+vendor_products: [Falcon Foundry, foundry-js]
+use_case: "Utilities"
 manifest_version: "2023-05-09"
 ignored:
   - .+/node_modules$
