@@ -1,6 +1,5 @@
 import { Page, FrameLocator } from '@playwright/test';
-import { BasePage } from './BasePage';
-import { config } from '../config/TestConfig';
+import { BasePage, config } from '@crowdstrike/foundry-playwright';
 
 /**
  * Main page object for the Foundry-JS Demo app.
