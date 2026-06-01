@@ -114,7 +114,7 @@ useEffect(() => {
             Browsers block external navigation from iframes due to security
             policies. The Foundry SDK provides{" "}
             <code className="bg-surface-base px-1 rounded">
-              falcon.navigation.onClick()
+              falcon.navigation.navigateTo()
             </code>{" "}
             to communicate with the parent Falcon Console, which can open
             external links on your behalf.
@@ -157,16 +157,17 @@ useEffect(() => {
             Implementation:
           </p>
           <code className="block bg-surface-base px-3 py-2 rounded border border-border-reg text-titles-and-attributes font-mono text-xs overflow-x-auto whitespace-pre">
-            {`// Add onClick handler to all external links
+            {`// Open external links via Falcon navigation
 const handleExternalClick = (event) => {
   event.preventDefault();
 
-  if (falcon?.navigation?.onClick) {
-    // Use nativeEvent for falcon.navigation.onClick
-    falcon.navigation.onClick(event.nativeEvent);
+  const url = event.currentTarget.href;
+
+  if (falcon?.navigation?.navigateTo) {
+    falcon.navigation.navigateTo({ path: url });
   } else {
     // Fallback for local development
-    window.open(event.currentTarget.href, '_blank');
+    window.open(url, '_blank');
   }
 };
 

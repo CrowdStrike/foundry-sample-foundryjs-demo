@@ -216,8 +216,8 @@ export function LogScaleDemoUI({
                       href={`/foundry/app-builder/${appId}/draft/data`}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (falcon?.navigation?.onClick) {
-                          falcon.navigation.onClick(e.nativeEvent);
+                        if (falcon?.navigation?.navigateTo) {
+                          falcon.navigation.navigateTo({ path: e.currentTarget.href });
                         } else {
                           window.open(e.currentTarget.href, '_blank');
                         }
