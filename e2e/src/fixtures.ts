@@ -1,4 +1,5 @@
 import { test as baseTest } from '@playwright/test';
+import { AuthFile } from '@crowdstrike/foundry-playwright';
 import { FoundryJsDemoPage } from './pages/FoundryJsDemoPage';
 import { EventsTabPage } from './pages/EventsTabPage';
 import { CollectionsTabPage } from './pages/CollectionsTabPage';
@@ -10,7 +11,6 @@ import { ModalsTabPage } from './pages/ModalsTabPage';
 import { NavigationTabPage } from './pages/NavigationTabPage';
 
 type FoundryFixtures = {
-  foundryJsDemoPage: FoundryJsDemoPage;
   eventsTabPage: EventsTabPage;
   collectionsTabPage: CollectionsTabPage;
   apiIntegrationsTabPage: ApiIntegrationsTabPage;
@@ -21,8 +21,19 @@ type FoundryFixtures = {
   navigationTabPage: NavigationTabPage;
 };
 
-export const test = baseTest.extend<FoundryFixtures>({
-  foundryJsDemoPage: async ({ page }, use) => { await use(new FoundryJsDemoPage(page)); },
+type FoundryWorkerFixtures = {
+  foundryJsDemoPage: FoundryJsDemoPage;
+};
+
+export const test = baseTest.extend<FoundryFixtures, FoundryWorkerFixtures>({
+  // One browser page is shared by every test in the worker, so the app is opened
+  // once and each test switches tabs inside it instead of reloading the console.
+  foundryJsDemoPage: [async ({ browser }, use) => {
+    const context = await browser.newContext({ storageState: AuthFile });
+    const page = await context.newPage();
+    await use(new FoundryJsDemoPage(page));
+    await context.close();
+  }, { scope: 'worker' }],
   eventsTabPage: async ({ foundryJsDemoPage }, use) => { await use(new EventsTabPage(foundryJsDemoPage)); },
   collectionsTabPage: async ({ foundryJsDemoPage }, use) => { await use(new CollectionsTabPage(foundryJsDemoPage)); },
   apiIntegrationsTabPage: async ({ foundryJsDemoPage }, use) => { await use(new ApiIntegrationsTabPage(foundryJsDemoPage)); },

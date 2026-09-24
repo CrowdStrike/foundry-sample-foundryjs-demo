@@ -3,13 +3,13 @@ import { test, expect } from '../src/fixtures';
 test.describe.configure({ mode: 'serial' });
 
 test.describe('Foundry-JS Demo - E2E Tests', () => {
-  test.beforeEach(async ({ foundryJsDemoPage }) => {
+  test.beforeAll(async ({ foundryJsDemoPage }) => {
     await foundryJsDemoPage.navigateToApp();
     await foundryJsDemoPage.verifyAppLoaded();
   });
 
   test('should render app and display sidebar navigation', async ({ foundryJsDemoPage }) => {
-    // App loaded verified in beforeEach — verify the sidebar is present
+    // App loaded verified in beforeAll — verify the sidebar is present
     const frame = foundryJsDemoPage.getAppFrame();
     await frame.getByText('Events').first().waitFor({ timeout: 10000 });
   });
