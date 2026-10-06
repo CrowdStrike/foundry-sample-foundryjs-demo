@@ -12,7 +12,7 @@
     "@shoelace-style/shoelace": "2.20.1",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "react-router-dom": "7.15.1"
+    "react-router-dom": "7.18.2"
   },
   "devDependencies": {
     "@eslint/js": "9.36.0",
@@ -25,16 +25,16 @@
     "@typescript-eslint/eslint-plugin": "8.44.1",
     "@typescript-eslint/parser": "8.44.1",
     "@vitejs/plugin-react": "5.1.0",
-    "@vitest/ui": "4.1.8",
+    "@vitest/ui": "4.1.11",
     "eslint": "9.36.0",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
     "globals": "15.15.0",
     "jsdom": "25.0.1",
-    "postcss": "8.5.14",
+    "postcss": "8.5.28",
     "typescript": "5.7.2",
     "vite": "7.3.6",
-    "vitest": "4.1.8"
+    "vitest": "4.1.11"
   },
   "scripts": {
     "build": "vite build",
@@ -55,8 +55,8 @@
       "flatted": "3.4.2",
       "picomatch@2": "2.3.2",
       "picomatch@4": "4.0.4",
-      "brace-expansion@1": "1.1.13",
-      "brace-expansion@2": "2.0.3",
+      "brace-expansion@1": "1.1.21",
+      "brace-expansion@2": "2.1.7",
       "lodash": "4.18.1",
       "uuid": "13.0.1",
       "yaml@1": "1.10.3",
