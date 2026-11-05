@@ -33,3 +33,7 @@ updates:
         versions: [">=5.0.4"]
       - dependency-name: "peter-evans/create-pull-request"
         versions: [">=8.0.0"]
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: weekly
