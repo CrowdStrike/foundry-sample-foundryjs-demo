@@ -1,7 +1,9 @@
 version: 2
 updates:
   - package-ecosystem: pip
-    directory: "/functions/GreetingFunction/"
+    directories:
+      - "/.github"
+      - "/functions/GreetingFunction/"
     schedule:
       interval: weekly
   - package-ecosystem: npm
